@@ -22,7 +22,7 @@ class _DataScreenState extends State<DataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DexScreener Coins'),
+        title: const Text('My Dashboard'),
       ),
       body: FutureBuilder<List<dynamic>>(
         future: dexData,
@@ -43,7 +43,7 @@ class _DataScreenState extends State<DataScreen> {
               // Get percentage and handle parsing
               String percentageString = token['24h'] ?? '0';
               double? percentage = double.tryParse(percentageString.replaceAll('%', ''));
-              
+
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 child: Column(
@@ -53,39 +53,61 @@ class _DataScreenState extends State<DataScreen> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Token logo
-                        Image.network(
-                          token['token']['tokenImageUrl'] ?? '',
-                          height: 40,
-                          width: 40,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.error);
-                          },
+                        // chain logo
+                        ClipOval(
+                            child: Image.network(
+                                token['token']['chainLogoUrl'] ?? '',
+                                height: 20,
+                                width: 20,
+                                fit: BoxFit.cover, // This ensures the image covers the entire circular area
+                                errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.error, size: 40);
+                                },
+                            ),
                         ),
+
+                        // token chain logo
+                        ClipOval(
+                            child: Image.network(
+                                token['token']['tokenImageUrl'] ?? '',
+                                height: 20,
+                                width: 20,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.error, size: 40);
+                                },
+                            ),
+                        ),
+
                         const SizedBox(width: 8), // Space between logo and text
 
                         // Token symbol
                         Text(
                           token['token']['tokenSymbol']?.toUpperCase() ?? 'UNKNOWN',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                         ),
 
+                        Spacer(),
                         const SizedBox(width: 16), // Space between symbol and price
 
                         // Token price
                         Text(
                           token['price']?.toString() ?? '0',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 12),
                         ),
 
                         const SizedBox(width: 16), // Space between price and 24h percentage
 
                         // 24-hour percentage change
                         Text(
-                          percentageString,  // Display the original string with the '%' symbol
+                          '24h ',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        Text(
+                          percentageString,
                           style: TextStyle(
-                            color: (percentage ?? 0) >= 0 ? Colors.green : Colors.red, // Compare the parsed double
-                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: (percentage ?? 0) >= 0 ? Colors.green : Colors.red,
                           ),
                         ),
                       ],
@@ -97,9 +119,9 @@ class _DataScreenState extends State<DataScreen> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Chain logo
+                        // dex logo
                         Image.network(
-                          token['token']['chainLogoUrl'] ?? '',
+                          token['token']['dexLogoUrl'] ?? '',
                           height: 20,
                           width: 20,
                           errorBuilder: (context, error, stackTrace) {
@@ -112,7 +134,7 @@ class _DataScreenState extends State<DataScreen> {
                         Expanded(
                           child: Text(
                             token['token']['tokenName'] ?? 'Unknown',
-                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -120,29 +142,50 @@ class _DataScreenState extends State<DataScreen> {
                         const SizedBox(width: 8), // Space between name and liquidity
 
                         // Liquidity (LIQ)
-                        Text(
-                          'LIQ: ${token['liquidity'] ?? '0'}',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 1),
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          child: Text(
+                            'LIQ ${token['liquidity'] ?? '0'}',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
                         ),
 
-                        const SizedBox(width: 8), // Space between liquidity and volume
+                        const SizedBox(width: 8),
 
                         // Volume (VOL)
-                        Text(
-                          'VOL: ${token['volume'] ?? '0'}',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 1),
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          child: Text(
+                            'VOL ${token['volume'] ?? '0'}',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
                         ),
 
                         const SizedBox(width: 8), // Space between volume and market cap
 
                         // Market cap (MCAP)
-                        Text(
-                          'MCAP: ${token['mcap']?.toString() ?? '0'}',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 1),
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          child: Text(
+                            'MCAP ${token['mcap']?.toString() ?? '0'}',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
                         ),
                       ],
                     ),
-                    const Divider(), // Add a divider between tokens for better visual separation
+                    const Divider(),
                   ],
                 ),
               );
