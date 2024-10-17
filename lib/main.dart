@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './src/data_screen.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: "assets/config/.env");
   runApp(const MyApp());
 }
 
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const DataScreen(),  // Use DataScreen as the home widget
+      home: const DataScreen(),
     );
   }
 }

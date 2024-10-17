@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DexApiService {
-  static const String baseUrl = 'http://localhost:9000/api';
+  final String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
 
   Future<List<dynamic>> fetchDexData() async {
     final response = await http.get(Uri.parse('$baseUrl/dex/tokens'));
