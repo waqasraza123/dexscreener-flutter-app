@@ -56,19 +56,6 @@ class DataScreenState extends State<DataScreen> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // chain logo
-                        ClipOval(
-                          child: Image.network(
-                            token['token']['chainLogoUrl'] ?? '',
-                            height: 20,
-                            width: 20,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error, size: 20);
-                            },
-                          ),
-                        ),
-
                         // token logo
                         ClipOval(
                           child: Image.network(
@@ -84,12 +71,31 @@ class DataScreenState extends State<DataScreen> {
 
                         const SizedBox(width: 8), // Space
 
-                        // Token symbol
-                        Text(
-                          token['token']['tokenSymbol']?.toUpperCase() ??
-                              'UNKNOWN',
-                          style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
+                        // Token symbol and chain symbol
+                        Row(
+                          children: [
+                            Text(
+                              token['token']['tokenSymbol']?.toUpperCase() ??
+                                  'UNKNOWN',
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                                width: 4), // Optional space between symbols
+                            const Text(
+                              '/',
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(
+                                width: 4), // Optional space between symbols
+                            Text(
+                              token['token']['chainSymbol']?.toUpperCase() ??
+                                  'UNKNOWN',
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ),
 
                         const Spacer(),
@@ -98,7 +104,8 @@ class DataScreenState extends State<DataScreen> {
                         // Token price
                         Text(
                           token['price']?.toString() ?? '0',
-                          style: const TextStyle(fontSize: 12),
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
                         ),
 
                         const SizedBox(width: 16), // Space
@@ -111,11 +118,11 @@ class DataScreenState extends State<DataScreen> {
                         Text(
                           percentageString,
                           style: TextStyle(
-                            fontSize: 12,
-                            color: (percentage ?? 0) >= 0
-                                ? Colors.green
-                                : Colors.red,
-                          ),
+                              fontSize: 12,
+                              color: (percentage ?? 0) >= 0
+                                  ? Colors.green
+                                  : Colors.red,
+                              fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
