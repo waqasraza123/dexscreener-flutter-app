@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import '../services/dex_api_service.dart';
+import '../utils/colors.dart';
 
 class DataScreen extends StatefulWidget {
   const DataScreen({super.key});
 
   @override
-  _DataScreenState createState() => _DataScreenState();
+  DataScreenState createState() => DataScreenState();
 }
 
-class _DataScreenState extends State<DataScreen> {
+class DataScreenState extends State<DataScreen> {
   final DexApiService apiService = DexApiService();
   late Future<List<dynamic>> dexData;
 
@@ -42,10 +43,12 @@ class _DataScreenState extends State<DataScreen> {
 
               // Get percentage and handle parsing
               String percentageString = token['24h'] ?? '0';
-              double? percentage = double.tryParse(percentageString.replaceAll('%', ''));
+              double? percentage =
+                  double.tryParse(percentageString.replaceAll('%', ''));
 
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -55,51 +58,53 @@ class _DataScreenState extends State<DataScreen> {
                       children: [
                         // chain logo
                         ClipOval(
-                            child: Image.network(
-                                token['token']['chainLogoUrl'] ?? '',
-                                height: 20,
-                                width: 20,
-                                fit: BoxFit.cover, // This ensures the image covers the entire circular area
-                                errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.error, size: 40);
-                                },
-                            ),
+                          child: Image.network(
+                            token['token']['chainLogoUrl'] ?? '',
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.error, size: 20);
+                            },
+                          ),
                         ),
 
-                        // token chain logo
+                        // token logo
                         ClipOval(
-                            child: Image.network(
-                                token['token']['tokenImageUrl'] ?? '',
-                                height: 20,
-                                width: 20,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(Icons.error, size: 40);
-                                },
-                            ),
+                          child: Image.network(
+                            token['token']['tokenImageUrl'] ?? '',
+                            height: 20,
+                            width: 20,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.error, size: 20);
+                            },
+                          ),
                         ),
 
-                        const SizedBox(width: 8), // Space between logo and text
+                        const SizedBox(width: 8), // Space
 
                         // Token symbol
                         Text(
-                          token['token']['tokenSymbol']?.toUpperCase() ?? 'UNKNOWN',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          token['token']['tokenSymbol']?.toUpperCase() ??
+                              'UNKNOWN',
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
                         ),
 
-                        Spacer(),
-                        const SizedBox(width: 16), // Space between symbol and price
+                        const Spacer(),
+                        const SizedBox(width: 16), // Space
 
                         // Token price
                         Text(
                           token['price']?.toString() ?? '0',
-                          style: TextStyle(fontSize: 12),
+                          style: const TextStyle(fontSize: 12),
                         ),
 
-                        const SizedBox(width: 16), // Space between price and 24h percentage
+                        const SizedBox(width: 16), // Space
 
                         // 24-hour percentage change
-                        Text(
+                        const Text(
                           '24h ',
                           style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
@@ -107,7 +112,9 @@ class _DataScreenState extends State<DataScreen> {
                           percentageString,
                           style: TextStyle(
                             fontSize: 12,
-                            color: (percentage ?? 0) >= 0 ? Colors.green : Colors.red,
+                            color: (percentage ?? 0) >= 0
+                                ? Colors.green
+                                : Colors.red,
                           ),
                         ),
                       ],
@@ -115,7 +122,7 @@ class _DataScreenState extends State<DataScreen> {
 
                     const SizedBox(height: 8), // Space between rows
 
-                    // Row 2: Chain logo, Token name, LIQ, VOL, MCAP
+                    // Row 2: Dex logo, Token full name, LIQ, VOL, MCAP
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -125,32 +132,45 @@ class _DataScreenState extends State<DataScreen> {
                           height: 20,
                           width: 20,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.error);
+                            return const Icon(Icons.error, size: 20);
                           },
                         ),
-                        const SizedBox(width: 8), // Space between chain logo and token name
+                        const SizedBox(width: 8), // Space
 
                         // Token name
                         Expanded(
                           child: Text(
                             token['token']['tokenName'] ?? 'Unknown',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                            style: const TextStyle(
+                                fontSize: 10, color: Colors.grey),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
 
-                        const SizedBox(width: 8), // Space between name and liquidity
+                        const SizedBox(width: 8), // Space
 
                         // Liquidity (LIQ)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6.0, vertical: 2.0),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1),
+                            border:
+                                Border.all(color: Colors.grey[300]!, width: 1),
                             borderRadius: BorderRadius.circular(6.0),
                           ),
-                          child: Text(
-                            'LIQ ${token['liquidity'] ?? '0'}',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          child: Row(
+                            children: [
+                              const Text(
+                                'LIQ ',
+                                style:
+                                    TextStyle(fontSize: 10, color: Colors.grey),
+                              ),
+                              Text(
+                                '${token['liquidity'] ?? '0'}',
+                                style: const TextStyle(
+                                    fontSize: 10, color: customBlack),
+                              ),
+                            ],
                           ),
                         ),
 
@@ -158,29 +178,53 @@ class _DataScreenState extends State<DataScreen> {
 
                         // Volume (VOL)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6.0, vertical: 2.0),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1),
+                            border:
+                                Border.all(color: Colors.grey[300]!, width: 1),
                             borderRadius: BorderRadius.circular(6.0),
                           ),
-                          child: Text(
-                            'VOL ${token['volume'] ?? '0'}',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          child: Row(
+                            children: [
+                              const Text(
+                                'VOL ',
+                                style:
+                                    TextStyle(fontSize: 10, color: Colors.grey),
+                              ),
+                              Text(
+                                token['volume'] ?? '0',
+                                style: const TextStyle(
+                                    fontSize: 10, color: customBlack),
+                              ),
+                            ],
                           ),
                         ),
 
-                        const SizedBox(width: 8), // Space between volume and market cap
+                        const SizedBox(width: 8), // Space
 
                         // Market cap (MCAP)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6.0, vertical: 2.0),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 1),
+                            border:
+                                Border.all(color: Colors.grey[300]!, width: 1),
                             borderRadius: BorderRadius.circular(6.0),
                           ),
-                          child: Text(
-                            'MCAP ${token['mcap']?.toString() ?? '0'}',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          child: Row(
+                            children: [
+                              const Text(
+                                'MCAP ',
+                                style:
+                                    TextStyle(fontSize: 10, color: Colors.grey),
+                              ),
+                              Text(
+                                token['mcap']?.toString() ?? '0',
+                                style: const TextStyle(
+                                    fontSize: 10, color: customBlack),
+                              ),
+                            ],
                           ),
                         ),
                       ],
