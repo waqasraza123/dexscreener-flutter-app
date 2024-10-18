@@ -13,24 +13,32 @@ class TokenMessagesScreen extends StatefulWidget {
 
 class TokenMessagesScreenState extends State<TokenMessagesScreen> {
   late ChatSocketService _chatSocketService;
-  List<Map<String, dynamic>> _messages = []; // Store incoming messages
+  final List<Map<String, dynamic>> _messages = [];
+  late String tokenContractAddress;
 
   @override
   void initState() {
     super.initState();
     _chatSocketService = ChatSocketService();
-    _chatSocketService.initializeSocket();
 
-    // Listen for new incoming messages and update the UI
+    tokenContractAddress = widget.token['contract_address'];
+
+    // Initialize socket connection and join the chat
+    _chatSocketService.initializeSocket(tokenContractAddress);
+
+    // Listen for new incoming messages and update the UI if mounted
     _chatSocketService.onNewMessage((messageData) {
-      setState(() {
-        _messages.add(messageData); // Add the new message to the list
-      });
+      if (mounted) {
+        setState(() {
+          _messages.add(messageData); // Add the new message to the list
+        });
+      }
     });
   }
 
   @override
   void dispose() {
+    // Clean up socket listeners
     _chatSocketService.closeConnection();
     super.dispose();
   }
@@ -51,8 +59,7 @@ class TokenMessagesScreenState extends State<TokenMessagesScreen> {
                 final message = _messages[index];
                 return ListTile(
                   leading: CircleAvatar(
-                    child: Text(message['user']
-                        [0]), // Display the first letter of the user's name
+                    child: Text(message['user'][0]), // First letter of username
                   ),
                   title: Text(message['user']),
                   subtitle: Text(message['content']),
@@ -60,18 +67,17 @@ class TokenMessagesScreenState extends State<TokenMessagesScreen> {
               },
             ),
           ),
+
           // Chat input field at the bottom
-          ChatInput(onSendMessage: (message) {
-            // Send the message using the ChatSocketService
-            _chatSocketService.sendMessage('UserName', message);
-            // Optionally, update your UI to show the new message in the list
-            setState(() {
-              _messages.add({
-                'user': 'UserName',
-                'content': message,
-                'timestamp': DateTime.now().toIso8601String(),
-              });
-            });
+          ChatInput(onSendMessage: (message, token) {
+            // Send the message using the ChatSocketService, including token data
+            _chatSocketService.sendMessage(
+              'UserName',
+              message,
+              widget.token['contract_address'], // Send contract address
+            );
+
+            // Remove the local `setState` call to avoid duplicate messages
           }),
         ],
       ),

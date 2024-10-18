@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ChatInput extends StatefulWidget {
-  final Function(String) onSendMessage;
+  final Function(String message, String contractAddress)
+      onSendMessage; // Updated callback
 
   const ChatInput({super.key, required this.onSendMessage});
 
@@ -12,10 +13,12 @@ class ChatInput extends StatefulWidget {
 class ChatInputState extends State<ChatInput> {
   final TextEditingController _controller = TextEditingController();
 
-  void _sendMessage() {
+  void _sendMessage(String tokenInfo) {
+    // Accept token info as parameter
     final message = _controller.text.trim();
     if (message.isNotEmpty) {
-      widget.onSendMessage(message);
+      widget.onSendMessage(
+          message, tokenInfo); // Send both message and token info
       _controller.clear(); // Clear the input field after sending
     }
   }
@@ -33,12 +36,14 @@ class ChatInputState extends State<ChatInput> {
                 hintText: 'Type your message...',
                 border: OutlineInputBorder(),
               ),
-              onSubmitted: (_) => _sendMessage(), // Send message on enter
+              onSubmitted: (_) => _sendMessage(
+                  "token_contract_address"), // Send message and token info on enter
             ),
           ),
           IconButton(
             icon: const Icon(Icons.send),
-            onPressed: _sendMessage, // Send message on button press
+            onPressed: () => _sendMessage(
+                'token_contract_address'), // Send message and token info on button press
           ),
         ],
       ),
