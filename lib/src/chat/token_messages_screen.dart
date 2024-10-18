@@ -43,6 +43,47 @@ class TokenMessagesScreenState extends State<TokenMessagesScreen> {
     super.dispose();
   }
 
+  Widget _buildMessageBubble(Map<String, dynamic> message, bool isMe) {
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        decoration: BoxDecoration(
+          color: isMe ? Colors.green[400] : Colors.grey[300],
+          borderRadius: BorderRadius.only(
+            topLeft: isMe ? const Radius.circular(15) : Radius.zero,
+            topRight: isMe ? Radius.zero : const Radius.circular(15),
+            bottomLeft: const Radius.circular(15),
+            bottomRight: const Radius.circular(15),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment:
+              isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            Text(
+              message['user'],
+              style: TextStyle(
+                color: isMe ? Colors.white : Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              message['content'],
+              style: TextStyle(
+                color: isMe ? Colors.white : Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,13 +98,9 @@ class TokenMessagesScreenState extends State<TokenMessagesScreen> {
               itemCount: _messages.length, // Use the actual messages count
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    child: Text(message['user'][0]), // First letter of username
-                  ),
-                  title: Text(message['user']),
-                  subtitle: Text(message['content']),
-                );
+                bool isMe =
+                    message['user'] == 'UserName'; // Check if it's my message
+                return _buildMessageBubble(message, isMe);
               },
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:logger/logger.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ChatSocketService {
   late IO.Socket _socket;
@@ -7,8 +8,8 @@ class ChatSocketService {
   bool _hasJoined = false; // Track if chat room has been joined
 
   void initializeSocket(String contractAddress) {
-    const apiUrl =
-        'http://localhost:9000'; // Replace with your actual server URL
+    final apiUrl = dotenv.env['SOCKET_BASE_URL'];
+
     _socket = IO.io(apiUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,

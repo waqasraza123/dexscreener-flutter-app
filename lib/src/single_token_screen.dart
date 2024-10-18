@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import './chat/token_messages_screen.dart';
 
 class SingleTokenScreen extends StatelessWidget {
-  final dynamic token; // The selected token data
+  final dynamic token;
 
   const SingleTokenScreen({super.key, required this.token});
 
