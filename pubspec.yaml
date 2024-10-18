@@ -1,5 +1,5 @@
 name: dexscreener_flutter
-description: "A new Flutter project."
+description: "Decentralized Echange Tokens | Analysis | Predictions | Trends."
 publish_to: 'none' 
 version: 1.0.0+1
 
@@ -16,6 +16,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   flutter_svg: ^1.1.0
   logger: ^1.0.0
+  socket_io_client: ^3.0.0
 
 dev_dependencies:
   flutter_test:

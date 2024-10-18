@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/dex_api_service.dart';
+import './single_token_screen.dart';
 import '../utils/colors.dart';
 
 class DataScreen extends StatefulWidget {
@@ -46,198 +47,213 @@ class DataScreenState extends State<DataScreen> {
               double? percentage =
                   double.tryParse(percentageString.replaceAll('%', ''));
 
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Row 1: Token logo, symbol, price, 24h change
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // token logo
-                        ClipOval(
-                          child: Image.network(
-                            token['token']['tokenImageUrl'] ?? '',
-                            height: 20,
-                            width: 20,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.error, size: 20);
-                            },
-                          ),
-                        ),
-
-                        const SizedBox(width: 8), // Space
-
-                        // Token symbol and chain symbol
-                        Row(
-                          children: [
-                            Text(
-                              token['token']['tokenSymbol']?.toUpperCase() ??
-                                  'UNKNOWN',
-                              style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(
-                                width: 4), // Optional space between symbols
-                            const Text(
-                              '/',
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(
-                                width: 4), // Optional space between symbols
-                            Text(
-                              token['token']['chainSymbol']?.toUpperCase() ??
-                                  'UNKNOWN',
-                              style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-
-                        const Spacer(),
-                        const SizedBox(width: 16), // Space
-
-                        // Token price
-                        Text(
-                          token['price']?.toString() ?? '0',
-                          style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-
-                        const SizedBox(width: 16), // Space
-
-                        // 24-hour percentage change
-                        const Text(
-                          '24h ',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                        Text(
-                          percentageString,
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: (percentage ?? 0) >= 0
-                                  ? Colors.green
-                                  : Colors.red,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
+              return GestureDetector(
+                onTap: () {
+                  // Navigate to SingleTokenScreen when token is clicked
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SingleTokenScreen(token: token),
                     ),
-
-                    const SizedBox(height: 8), // Space between rows
-
-                    // Row 2: Dex logo, Token full name, LIQ, VOL, MCAP
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // dex logo
-                        Image.network(
-                          token['token']['dexLogoUrl'] ?? '',
-                          height: 20,
-                          width: 20,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.error, size: 20);
-                          },
+                  );
+                },
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    // The onTap here can also be handled by GestureDetector
+                    onTap: () {
+                      // Trigger the same navigation
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SingleTokenScreen(token: token),
                         ),
-                        const SizedBox(width: 8), // Space
-
-                        // Token name
-                        Expanded(
-                          child: Text(
-                            token['token']['tokenName'] ?? 'Unknown',
-                            style: const TextStyle(
-                                fontSize: 10, color: Colors.grey),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-
-                        const SizedBox(width: 8), // Space
-
-                        // Liquidity (LIQ)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6.0, vertical: 2.0),
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Colors.grey[300]!, width: 1),
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
-                          child: Row(
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Row 1: Token logo, symbol, price, 24h change
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              // token logo
+                              ClipOval(
+                                child: Image.network(
+                                  token['token']['tokenImageUrl'] ?? '',
+                                  height: 20,
+                                  width: 20,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Icon(Icons.error, size: 20);
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 8), // Space
+                              // Token symbol and chain symbol
+                              Row(
+                                children: [
+                                  Text(
+                                    token['token']['tokenSymbol']
+                                            ?.toUpperCase() ??
+                                        'UNKNOWN',
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(width: 4), // Space
+                                  const Text(
+                                    '/',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(width: 4), // Space
+                                  Text(
+                                    token['token']['chainSymbol']
+                                            ?.toUpperCase() ??
+                                        'UNKNOWN',
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              const Spacer(),
+                              const SizedBox(width: 16), // Space
+                              // Token price
+                              Text(
+                                token['price']?.toString() ?? '0',
+                                style: const TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 16), // Space
+                              // 24-hour percentage change
                               const Text(
-                                'LIQ ',
+                                '24h ',
                                 style:
-                                    TextStyle(fontSize: 10, color: Colors.grey),
+                                    TextStyle(fontSize: 12, color: Colors.grey),
                               ),
                               Text(
-                                '${token['liquidity'] ?? '0'}',
-                                style: const TextStyle(
-                                    fontSize: 10, color: customBlack),
+                                percentageString,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: (percentage ?? 0) >= 0
+                                        ? Colors.green
+                                        : Colors.red,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
-                        ),
-
-                        const SizedBox(width: 8),
-
-                        // Volume (VOL)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6.0, vertical: 2.0),
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Colors.grey[300]!, width: 1),
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
-                          child: Row(
+                          const SizedBox(height: 8), // Space between rows
+                          // Row 2: Dex logo, Token full name, LIQ, VOL, MCAP
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text(
-                                'VOL ',
-                                style:
-                                    TextStyle(fontSize: 10, color: Colors.grey),
+                              // dex logo
+                              Image.network(
+                                token['token']['dexLogoUrl'] ?? '',
+                                height: 20,
+                                width: 20,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Icon(Icons.error, size: 20);
+                                },
                               ),
-                              Text(
-                                token['volume'] ?? '0',
-                                style: const TextStyle(
-                                    fontSize: 10, color: customBlack),
+                              const SizedBox(width: 8), // Space
+                              // Token name
+                              Expanded(
+                                child: Text(
+                                  token['token']['tokenName'] ?? 'Unknown',
+                                  style: const TextStyle(
+                                      fontSize: 10, color: Colors.grey),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 8), // Space
+                              // Liquidity (LIQ)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6.0, vertical: 2.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.grey[300]!, width: 1),
+                                  borderRadius: BorderRadius.circular(6.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Text(
+                                      'LIQ ',
+                                      style: TextStyle(
+                                          fontSize: 10, color: Colors.grey),
+                                    ),
+                                    Text(
+                                      '${token['liquidity'] ?? '0'}',
+                                      style: const TextStyle(
+                                          fontSize: 10, color: customBlack),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              // Volume (VOL)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6.0, vertical: 2.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.grey[300]!, width: 1),
+                                  borderRadius: BorderRadius.circular(6.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Text(
+                                      'VOL ',
+                                      style: TextStyle(
+                                          fontSize: 10, color: Colors.grey),
+                                    ),
+                                    Text(
+                                      token['volume'] ?? '0',
+                                      style: const TextStyle(
+                                          fontSize: 10, color: customBlack),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8), // Space
+                              // Market cap (MCAP)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6.0, vertical: 2.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.grey[300]!, width: 1),
+                                  borderRadius: BorderRadius.circular(6.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Text(
+                                      'MCAP ',
+                                      style: TextStyle(
+                                          fontSize: 10, color: Colors.grey),
+                                    ),
+                                    Text(
+                                      token['mcap']?.toString() ?? '0',
+                                      style: const TextStyle(
+                                          fontSize: 10, color: customBlack),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
-
-                        const SizedBox(width: 8), // Space
-
-                        // Market cap (MCAP)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6.0, vertical: 2.0),
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Colors.grey[300]!, width: 1),
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
-                          child: Row(
-                            children: [
-                              const Text(
-                                'MCAP ',
-                                style:
-                                    TextStyle(fontSize: 10, color: Colors.grey),
-                              ),
-                              Text(
-                                token['mcap']?.toString() ?? '0',
-                                style: const TextStyle(
-                                    fontSize: 10, color: customBlack),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                          const Divider(),
+                        ],
+                      ),
                     ),
-                    const Divider(),
-                  ],
+                  ),
                 ),
               );
             },
