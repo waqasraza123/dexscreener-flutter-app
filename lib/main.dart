@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import './src/data_screen.dart';
 import './src/auth/login_screen.dart';
-import './src/user/profile_screen.dart'; // Import the Profile screen
+import './src/user/profile_screen.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/config/.env");
@@ -55,7 +55,7 @@ class MainScreenState extends State<MainScreen> {
     final bool isLoggedIn = userProvider.user?.accessToken != null;
 
     // Ensure there are always two items in the list: Home + Profile or Login
-    final List<Widget> _screens = [
+    final List<Widget> screens = [
       const DataScreen(), // Home screen
       isLoggedIn
           ? const ProfileScreen()
@@ -76,7 +76,7 @@ class MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      body: _screens[_selectedIndex],
+      body: screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: Colors.blueAccent,
