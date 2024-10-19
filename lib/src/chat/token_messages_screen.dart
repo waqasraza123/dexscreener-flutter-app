@@ -106,7 +106,7 @@ class TokenMessagesScreenState extends State<TokenMessagesScreen> {
             formattedTimestamp,
             style: TextStyle(
               color: Colors.grey[600],
-              fontSize: 12,
+              fontSize: 8,
             ),
           ),
         ),
