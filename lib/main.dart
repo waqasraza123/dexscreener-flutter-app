@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import './src/data_screen.dart';
 import './src/auth/login_screen.dart';
 import './src/auth/register_screen.dart';
+import './src/user/profile_screen.dart'; // Import the Profile screen
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/config/.env");
@@ -25,8 +26,7 @@ class MyApp extends StatelessWidget {
       title: 'DexScreener Tokens',
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor:
-            Colors.white, // Set the background color to white
+        scaffoldBackgroundColor: Colors.white,
       ),
       home: const MainScreen(),
     );
@@ -41,14 +41,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0; // Track the currently selected index
-
-  // List of screens to display
-  final List<Widget> _screens = [
-    const DataScreen(), // Home or Data screen
-    const LoginScreen(), // Login screen
-    const RegisterScreen() // Register screen
-  ];
+  int _selectedIndex = 0;
 
   // Function to handle navigation on bottom bar tap
   void _onItemTapped(int index) {
@@ -59,13 +52,27 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: true);
+    final bool isLoggedIn = userProvider.user?.accessToken != null;
+
+    // Adjust the list of screens dynamically based on the login status
+    final List<Widget> _screens = [
+      const DataScreen(), // Home screen
+      if (isLoggedIn)
+        const ProfileScreen()
+      else
+        const LoginScreen(), // Show profile if logged in, otherwise login
+      if (!isLoggedIn)
+        const RegisterScreen(), // Register screen only for non-logged users
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         title: Text(
-          _getTitleForIndex(_selectedIndex),
+          _getTitleForIndex(_selectedIndex, isLoggedIn),
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -73,44 +80,60 @@ class MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      body: _screens[_selectedIndex], // Display the selected screen
-
-      // Bottom Navigation Bar
+      body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         selectedItemColor: Colors.blueAccent,
         unselectedItemColor: Colors.grey,
-        showSelectedLabels: false, // Hide labels for sleek look
+        showSelectedLabels: false,
         showUnselectedLabels: false,
         elevation: 5,
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped, // Handle item taps
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.login_outlined),
-            label: 'Login',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_add_outlined),
-            label: 'Register',
-          ),
-        ],
+        onTap: _onItemTapped,
+        items: _buildBottomNavBarItems(isLoggedIn),
       ),
     );
   }
 
-  String _getTitleForIndex(int index) {
+  // Helper method to build Bottom Navigation Bar items
+  List<BottomNavigationBarItem> _buildBottomNavBarItems(bool isLoggedIn) {
+    List<BottomNavigationBarItem> items = [
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.home_outlined),
+        label: 'Home',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Profile',
+      ),
+    ];
+
+    // Add Login/Register items only if the user is not logged in
+    if (!isLoggedIn) {
+      items.addAll([
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.login_outlined),
+          label: 'Login',
+        ),
+        const BottomNavigationBarItem(
+          icon: Icon(Icons.person_add_outlined),
+          label: 'Register',
+        ),
+      ]);
+    }
+
+    return items;
+  }
+
+  // Get title for AppBar based on selected index and login status
+  String _getTitleForIndex(int index, bool isLoggedIn) {
     switch (index) {
       case 0:
-        return 'My Dashboard'; // Title for DataScreen
+        return 'My Dashboard'; // Home screen title
       case 1:
-        return 'Login'; // Title for LoginScreen
+        return isLoggedIn ? 'Profile' : 'Login'; // Profile/Login screen title
       case 2:
-        return 'Register'; // Title for RegisterScreen
+        return 'Register'; // Register screen title (only for non-logged users)
       default:
         return '';
     }
