@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
-import '../../utils/colors.dart'; // Importing your color scheme
+import '../../utils/colors.dart';
+import '../../models/user.dart';
+import '../../providers/user_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,7 +20,7 @@ class LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
 
   // Login user function
-  Future<void> _login() async {
+  Future<void> _login(BuildContext context) async {
     if (!_formKey.currentState!.validate()) return;
 
     _formKey.currentState!.save();
@@ -26,77 +29,39 @@ class LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
 
-    bool success = false;
-    String? errorMessage;
-
     try {
-      success = await _authService.loginUser(_email!, _password!);
+      // Login user and get user data
+      final result = await _authService.loginUser(_email!, _password!);
+      final success = result['success'] as bool;
+
+      if (success) {
+        // Create User object from userData
+        User user = User.fromMap(
+            result['data']); // Assuming your data contains user information
+
+        // Set user in UserProvider
+        Provider.of<UserProvider>(context, listen: false).setUser(user);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login Successful!')),
+        );
+        Navigator.pushReplacementNamed(context, '/data');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result['message'] ?? 'Login failed')),
+        );
+      }
     } catch (e) {
-      errorMessage = 'An error occurred: $e';
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
     } finally {
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
-
-        if (success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login Successful!')),
-          );
-          Navigator.pushReplacementNamed(context, '/data');
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorMessage ?? 'Login failed')),
-          );
-        }
       }
     }
-  }
-
-  InputDecoration _buildInputDecoration(String hintText, IconData icon) {
-    return InputDecoration(
-      filled: true,
-      fillColor: Colors.white,
-      hintText: hintText,
-      hintStyle: const TextStyle(
-        fontWeight: FontWeight.normal,
-        color: Colors.grey,
-      ),
-      prefixIcon: Icon(
-        icon,
-        color: softBlue, // Soft blue for icons
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: const BorderSide(
-          color: Colors.grey,
-          width: 1.0,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: const BorderSide(
-          color: Colors.grey,
-          width: 2.0,
-        ),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: const BorderSide(
-          color: Colors.red,
-          width: 1.0,
-        ),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
-        borderSide: const BorderSide(
-          color: Colors.red,
-          width: 2.0,
-        ),
-      ),
-      contentPadding:
-          const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
-    );
   }
 
   @override
@@ -151,7 +116,8 @@ class LoginScreenState extends State<LoginScreen> {
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : ElevatedButton(
-                        onPressed: _login,
+                        onPressed: () =>
+                            _login(context), // Pass context to _login
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -187,6 +153,52 @@ class LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  InputDecoration _buildInputDecoration(String hintText, IconData icon) {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      hintText: hintText,
+      hintStyle: const TextStyle(
+        fontWeight: FontWeight.normal,
+        color: Colors.grey,
+      ),
+      prefixIcon: Icon(
+        icon,
+        color: softBlue, // Soft blue for icons
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(
+          color: Colors.grey,
+          width: 1.0,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(
+          color: Colors.grey,
+          width: 2.0,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(
+          color: Colors.red,
+          width: 1.0,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(
+          color: Colors.red,
+          width: 2.0,
+        ),
+      ),
+      contentPadding:
+          const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
     );
   }
 }

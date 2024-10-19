@@ -1,12 +1,19 @@
+import 'package:dexscreener_flutter/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import './src/data_screen.dart';
 import './src/auth/login_screen.dart';
 import './src/auth/register_screen.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/config/.env");
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserProvider()..loadUser(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

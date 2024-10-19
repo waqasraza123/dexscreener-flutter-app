@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:logger/logger.dart';
 
 class AuthService {
   final String apiBaseURL = dotenv.env['API_BASE_URL'] ?? '';
@@ -39,8 +40,9 @@ class AuthService {
     }
   }
 
-  Future<bool> loginUser(String email, String password) async {
+  Future<Map<String, dynamic>> loginUser(String email, String password) async {
     final loginUrl = Uri.parse('$apiBaseURL/auth/login');
+    final Logger logger = Logger();
 
     try {
       final response = await http.post(
@@ -55,12 +57,22 @@ class AuthService {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        return true;
+        return {
+          'success': true,
+          'message': 'Login successful.',
+          'data': data['user'],
+        };
       } else {
-        return false;
+        return {
+          'success': false,
+          'message': 'Login failed.',
+        };
       }
     } catch (e) {
-      throw Exception('Login failed: $e');
+      return {
+        'success': false,
+        'message': 'An error occurred. $e',
+      };
     }
   }
 }
