@@ -4,7 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import './src/data_screen.dart';
 import './src/auth/login_screen.dart';
-import './src/auth/register_screen.dart';
 import './src/user/profile_screen.dart'; // Import the Profile screen
 
 Future<void> main() async {
@@ -55,15 +54,12 @@ class MainScreenState extends State<MainScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final bool isLoggedIn = userProvider.user?.accessToken != null;
 
-    // Adjust the list of screens dynamically based on the login status
+    // Ensure there are always two items in the list: Home + Profile or Login
     final List<Widget> _screens = [
       const DataScreen(), // Home screen
-      if (isLoggedIn)
-        const ProfileScreen()
-      else
-        const LoginScreen(), // Show profile if logged in, otherwise login
-      if (!isLoggedIn)
-        const RegisterScreen(), // Register screen only for non-logged users
+      isLoggedIn
+          ? const ProfileScreen()
+          : const LoginScreen(), // Profile if logged in, Login if not
     ];
 
     return Scaffold(
@@ -97,32 +93,16 @@ class MainScreenState extends State<MainScreen> {
 
   // Helper method to build Bottom Navigation Bar items
   List<BottomNavigationBarItem> _buildBottomNavBarItems(bool isLoggedIn) {
-    List<BottomNavigationBarItem> items = [
-      const BottomNavigationBarItem(
+    return const [
+      BottomNavigationBarItem(
         icon: Icon(Icons.home_outlined),
         label: 'Home',
       ),
-      const BottomNavigationBarItem(
+      BottomNavigationBarItem(
         icon: Icon(Icons.person),
-        label: 'Profile',
+        label: 'Profile', // Show Profile or Login based on state
       ),
     ];
-
-    // Add Login/Register items only if the user is not logged in
-    if (!isLoggedIn) {
-      items.addAll([
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.login_outlined),
-          label: 'Login',
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(Icons.person_add_outlined),
-          label: 'Register',
-        ),
-      ]);
-    }
-
-    return items;
   }
 
   // Get title for AppBar based on selected index and login status
@@ -132,8 +112,6 @@ class MainScreenState extends State<MainScreen> {
         return 'My Dashboard'; // Home screen title
       case 1:
         return isLoggedIn ? 'Profile' : 'Login'; // Profile/Login screen title
-      case 2:
-        return 'Register'; // Register screen title (only for non-logged users)
       default:
         return '';
     }
