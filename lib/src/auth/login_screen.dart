@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../services/auth_service.dart'; // Import the auth service for login functionality
+import '../../services/auth_service.dart';
+import '../../utils/colors.dart'; // Importing your color scheme
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -52,11 +53,56 @@ class LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  InputDecoration _buildInputDecoration(String hintText, IconData icon) {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      hintText: hintText,
+      hintStyle: const TextStyle(
+        fontWeight: FontWeight.normal,
+        color: Colors.grey,
+      ),
+      prefixIcon: Icon(
+        icon,
+        color: softBlue, // Soft blue for icons
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(
+          color: Colors.grey,
+          width: 1.0,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(
+          color: Colors.grey,
+          width: 2.0,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(
+          color: Colors.red,
+          width: 1.0,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        borderSide: const BorderSide(
+          color: Colors.red,
+          width: 2.0,
+        ),
+      ),
+      contentPadding:
+          const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.grey[200], // Light background color for modern look
+      backgroundColor: Colors.white, // White background for the app
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -70,25 +116,15 @@ class LoginScreenState extends State<LoginScreen> {
                   'Welcome Back!',
                   style: TextStyle(
                     fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    fontWeight: FontWeight.normal,
+                    color: deepBlue, // Deep blue for the text
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Email Address',
-                    prefixIcon: const Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none, // No border
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
-                  ),
+                  decoration: _buildInputDecoration(
+                      'Email Address', Icons.email_outlined),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -100,18 +136,8 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Password',
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                      borderSide: BorderSide.none, // No border
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
-                  ),
+                  decoration:
+                      _buildInputDecoration('Password', Icons.lock_outline),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -131,14 +157,15 @@ class LoginScreenState extends State<LoginScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
                           ),
-                          backgroundColor: Colors.blueAccent,
+                          backgroundColor:
+                              brightGreen, // Bright green for the button
                         ),
                         child: const Text(
                           'Login',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ),
@@ -150,8 +177,8 @@ class LoginScreenState extends State<LoginScreen> {
                   child: const Text(
                     'Don\'t have an account? Register here',
                     style: TextStyle(
-                      color: Colors.blueAccent,
-                      fontWeight: FontWeight.bold,
+                      color: deepBlue,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                 ),

@@ -170,7 +170,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           backgroundColor:
-                              brightGreen, // Bright red for button background
+                              brightGreen, // Bright green for button background
                         ),
                         child: const Text(
                           'Register',
@@ -190,7 +190,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                     'Already have an account? Login here',
                     style: TextStyle(
                       color: deepBlue, // Deep blue for text
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                 ),
