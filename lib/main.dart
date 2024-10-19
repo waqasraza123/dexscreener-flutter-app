@@ -17,16 +17,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'DexScreener Tokens',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
+        scaffoldBackgroundColor:
+            Colors.white, // Set the background color to white
       ),
-      // Named routes for easier navigation
-      routes: {
-        '/': (context) =>
-            const MainScreen(), // Main screen with Drawer Navigation
-        '/login': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
-      },
+      home: const MainScreen(),
     );
   }
 }
@@ -35,10 +30,10 @@ class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  MainScreenState createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0; // Track the currently selected index
 
   // List of screens to display
@@ -48,67 +43,69 @@ class _MainScreenState extends State<MainScreen> {
     const RegisterScreen() // Register screen
   ];
 
-  // Drawer menu items
-  Widget _buildDrawerMenu(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Text(
-              'Navigation Menu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Home'),
-            onTap: () {
-              setState(() {
-                _selectedIndex = 0;
-              });
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.login),
-            title: const Text('Login'),
-            onTap: () {
-              setState(() {
-                _selectedIndex = 1;
-              });
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.person_add),
-            title: const Text('Register'),
-            onTap: () {
-              setState(() {
-                _selectedIndex = 2;
-              });
-              Navigator.pop(context); // Close the drawer
-            },
-          ),
-        ],
-      ),
-    );
+  // Function to handle navigation on bottom bar tap
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DexScreener Tokens'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          _getTitleForIndex(_selectedIndex),
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
       ),
       body: _screens[_selectedIndex], // Display the selected screen
-      drawer: _buildDrawerMenu(context), // Add the drawer
+
+      // Bottom Navigation Bar
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blueAccent,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: false, // Hide labels for sleek look
+        showUnselectedLabels: false,
+        elevation: 5,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped, // Handle item taps
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.login_outlined),
+            label: 'Login',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_add_outlined),
+            label: 'Register',
+          ),
+        ],
+      ),
     );
+  }
+
+  String _getTitleForIndex(int index) {
+    switch (index) {
+      case 0:
+        return 'My Dashboard'; // Title for DataScreen
+      case 1:
+        return 'Login'; // Title for LoginScreen
+      case 2:
+        return 'Register'; // Title for RegisterScreen
+      default:
+        return '';
+    }
   }
 }

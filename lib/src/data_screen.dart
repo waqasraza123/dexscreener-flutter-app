@@ -23,9 +23,9 @@ class DataScreenState extends State<DataScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Dashboard'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('My Dashboard'),
+      // ),
       body: FutureBuilder<List<dynamic>>(
         future: dexData,
         builder: (context, snapshot) {
