@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/user_provider.dart';
 import './chat_input.dart';
 import '../../services/chat_socket_service.dart';
 
@@ -95,7 +97,7 @@ class TokenMessagesScreenState extends State<TokenMessagesScreen> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: _messages.length, // Use the actual messages count
+              itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
                 bool isMe =
@@ -107,14 +109,16 @@ class TokenMessagesScreenState extends State<TokenMessagesScreen> {
 
           // Chat input field at the bottom
           ChatInput(onSendMessage: (message, token) {
+            final userProvider =
+                Provider.of<UserProvider>(context, listen: false);
+            final userEmail = userProvider.user?.email ?? 'Guest';
+
             // Send the message using the ChatSocketService, including token data
             _chatSocketService.sendMessage(
-              'UserName',
+              userEmail,
               message,
               widget.token['contract_address'], // Send contract address
             );
-
-            // Remove the local `setState` call to avoid duplicate messages
           }),
         ],
       ),
