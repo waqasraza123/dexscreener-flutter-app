@@ -4,15 +4,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import './src/data_screen.dart';
 import './src/auth/login_screen.dart';
+import './src/auth/register_screen.dart';
 import './src/user/profile_screen.dart';
-// import 'package:purchases_flutter/purchases_flutter.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/config/.env");
-
-  // Initialize RevenueCat
-  // final revenueCatAPIKey = dotenv.env['REVENUE_CAT_GOOGLE_API_KEY'] ?? '';
-  // await Purchases.configure(PurchasesConfiguration(revenueCatAPIKey));
 
   runApp(
     ChangeNotifierProvider(
@@ -33,7 +29,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: const MainScreen(),
+      home: const MainScreen(), // Main screen with bottom navigation
+      routes: {
+        '/login': (context) => const LoginScreen(), // Define login route
+        '/register': (context) =>
+            const RegisterScreen(), // Define register route
+      },
     );
   }
 }
@@ -60,7 +61,7 @@ class MainScreenState extends State<MainScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final bool isLoggedIn = userProvider.user?.accessToken != null;
 
-    // Ensure there are always two items in the list: Home + Profile or Login
+    // Define the two screens for the bottom navigation: Home and Profile/Login
     final List<Widget> screens = [
       const DataScreen(), // Home screen
       isLoggedIn
