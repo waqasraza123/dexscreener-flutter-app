@@ -5,15 +5,14 @@ import 'package:provider/provider.dart';
 import './src/data_screen.dart';
 import './src/auth/login_screen.dart';
 import './src/user/profile_screen.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
+// import 'package:purchases_flutter/purchases_flutter.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/config/.env");
 
   // Initialize RevenueCat
-  await Purchases.setLogLevel(LogLevel.debug);
-  final revenueCatAPIKey = dotenv.env['REVENUE_CAT_GOOGLE_API_KEY'] ?? '';
-  await Purchases.configure(PurchasesConfiguration(revenueCatAPIKey));
+  // final revenueCatAPIKey = dotenv.env['REVENUE_CAT_GOOGLE_API_KEY'] ?? '';
+  // await Purchases.configure(PurchasesConfiguration(revenueCatAPIKey));
 
   runApp(
     ChangeNotifierProvider(

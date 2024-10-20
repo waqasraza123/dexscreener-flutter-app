@@ -121,7 +121,7 @@ class LoginScreenState extends State<LoginScreen> {
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: BorderRadius.circular(50),
                           ),
                           backgroundColor:
                               brightGreen, // Bright green for the button
@@ -141,7 +141,7 @@ class LoginScreenState extends State<LoginScreen> {
                     Navigator.pushNamed(context, '/register');
                   },
                   child: const Text(
-                    'Don\'t have an account? Register here',
+                    'Don\'t have an account? Register here.',
                     style: TextStyle(
                       color: deepBlue,
                       fontWeight: FontWeight.normal,
@@ -167,38 +167,38 @@ class LoginScreenState extends State<LoginScreen> {
       ),
       prefixIcon: Icon(
         icon,
-        color: softBlue, // Soft blue for icons
+        color: Colors.grey, // Soft blue for icons
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(50),
         borderSide: const BorderSide(
           color: Colors.grey,
           width: 1.0,
         ),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(50),
         borderSide: const BorderSide(
           color: Colors.grey,
           width: 2.0,
         ),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(50),
         borderSide: const BorderSide(
           color: Colors.red,
           width: 1.0,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(50),
         borderSide: const BorderSide(
           color: Colors.red,
           width: 2.0,
         ),
       ),
       contentPadding:
-          const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+          const EdgeInsets.symmetric(vertical: 16.0, horizontal: 30.0),
     );
   }
 }
