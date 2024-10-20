@@ -67,28 +67,28 @@ class RegisterScreenState extends State<RegisterScreen> {
         color: Colors.grey,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(50),
         borderSide: const BorderSide(
           color: Colors.grey,
           width: 1.0,
         ),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(50),
         borderSide: const BorderSide(
           color: Colors.grey,
           width: 2.0,
         ),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(50),
         borderSide: const BorderSide(
           color: Colors.red,
           width: 1.0,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(50),
         borderSide: const BorderSide(
           color: Colors.red,
           width: 2.0,
@@ -102,6 +102,10 @@ class RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+        backgroundColor: Colors.white,
+      ),
       backgroundColor: Colors.white,
       body: Center(
         child: Padding(
@@ -167,10 +171,9 @@ class RegisterScreenState extends State<RegisterScreen> {
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
+                            borderRadius: BorderRadius.circular(50),
                           ),
-                          backgroundColor:
-                              brightGreen, // Bright green for button background
+                          backgroundColor: skyBlue,
                         ),
                         child: const Text(
                           'Register',
