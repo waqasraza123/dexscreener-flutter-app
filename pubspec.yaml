@@ -20,6 +20,7 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.3.2
   intl: ^0.17.0
+  purchases_flutter: ^6.0.0
 
 dev_dependencies:
   flutter_test:
