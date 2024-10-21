@@ -7,7 +7,7 @@ class TokenService {
   final String baseUrl = '${dotenv.env['API_BASE_URL']}/dex/tokens/token/';
 
   // Method to fetch token holders with pagination support
-  Future<dynamic> fetchTokenHolders(
+  Future<Map<String, dynamic>> fetchTokenHolders(
       String contractAddress, int limit, int offset) async {
     final String url =
         '$baseUrl$contractAddress/holders?limit=$limit&offset=$offset';
