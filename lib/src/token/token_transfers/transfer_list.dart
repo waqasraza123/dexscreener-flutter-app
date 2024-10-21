@@ -19,7 +19,6 @@ class TransferList extends StatelessWidget {
       children: transfers.map<Widget>((transfer) {
         return TransferCard(
           transfer: transfer,
-          cardColor: getRandomColor(),
         );
       }).toList(),
     );
