@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../../services/token_service.dart';
+import '../../utils/amount_converter.dart'; // Import the converter utility
 
 class TokenHolders extends StatefulWidget {
   final String contractAddress;
@@ -11,7 +12,8 @@ class TokenHolders extends StatefulWidget {
   TokenHoldersState createState() => TokenHoldersState();
 }
 
-class TokenHoldersState extends State<TokenHolders> {
+class TokenHoldersState extends State<TokenHolders>
+    with TickerProviderStateMixin {
   List<dynamic> displayedHolders = [];
   int itemsToLoad = 10; // Number of items to load per request
   bool isLoadingMore = false;
@@ -70,41 +72,91 @@ class TokenHoldersState extends State<TokenHolders> {
         }
         return false;
       },
-      child: ListView(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blueAccent, Colors.purpleAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: ListView(
+          padding: const EdgeInsets.all(16.0),
+          children: [
+            const Text(
               'Holders',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            const SizedBox(height: 16),
+            displayedHolders.isNotEmpty
+                ? ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount:
+                        displayedHolders.length + (isLoadingMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == displayedHolders.length && isLoadingMore) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+
+                      var holder = displayedHolders[index];
+                      return _buildHolderCard(holder);
+                    },
+                  )
+                : const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text('No holders data available.',
+                        style: TextStyle(color: Colors.white)),
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHolderCard(Map<String, dynamic> holder) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            holder['account'],
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
           const SizedBox(height: 8),
-          displayedHolders.isNotEmpty
-              ? ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: displayedHolders.length + (isLoadingMore ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index == displayedHolders.length && isLoadingMore) {
-                      return const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-
-                    var holder = displayedHolders[index];
-                    return ListTile(
-                      title: Text(holder['account']),
-                      subtitle: Text(
-                          'Quantity: ${holder['quantity']}, Percentage: ${holder['percentage']}%'),
-                    );
-                  },
-                )
-              : const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text('No holders data available.'),
-                ),
+          Text(
+            'Quantity: ${formatAmount(holder['quantity'])}', // Use the converter
+            style: const TextStyle(fontSize: 16, color: Colors.black54),
+          ),
+          Text(
+            'Percentage: ${holder['percentage']}%',
+            style: const TextStyle(fontSize: 16, color: Colors.black54),
+          ),
         ],
       ),
     );
