@@ -73,7 +73,7 @@ class TokenHoldersState extends State<TokenHolders>
         return false;
       },
       child: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.blueAccent, Colors.purpleAccent],
             begin: Alignment.topLeft,

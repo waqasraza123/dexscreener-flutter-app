@@ -21,6 +21,7 @@ dependencies:
   shared_preferences: ^2.3.2
   intl: ^0.17.0
   purchases_flutter: ^6.0.0
+  flutter_animate: ^4.5.0
 
 dev_dependencies:
   flutter_test:

@@ -30,7 +30,7 @@ class SingleTokenScreenState extends State<SingleTokenScreen> {
   @override
   Widget build(BuildContext context) {
     // Define the screens corresponding to the tabs
-    final List<Widget> _screens = [
+    final List<Widget> screens = [
       TokenOverview(token: widget.token), // Overview screen
       TokenHolders(contractAddress: widget.token['contract_address']),
       TokenTransfers(contractAddress: widget.token['contract_address']),
@@ -55,7 +55,7 @@ class SingleTokenScreenState extends State<SingleTokenScreen> {
           ),
         ],
       ),
-      body: _screens[_selectedIndex], // Display the currently selected screen
+      body: screens[_selectedIndex], // Display the currently selected screen
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
