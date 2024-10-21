@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import '../../services/token_service.dart';
-import '../../utils/amount_converter.dart';
-import '../../utils/time_converter.dart';
+import '../token/token_transfers/token_transfer_loader.dart';
+import './token_transfers/transfer_list.dart';
 
 class TokenTransfers extends StatefulWidget {
   final String contractAddress;
@@ -15,15 +14,15 @@ class TokenTransfers extends StatefulWidget {
 
 class TokenTransfersState extends State<TokenTransfers> {
   List<dynamic> displayedTransfers = [];
-  int itemsToLoad = 10;
-  bool isLoadingMore = false;
   bool isLoadingInitial = true;
   bool hasError = false;
-  int currentOffset = 0;
+  late TokenTransferLoader transferLoader; // Use TokenTransferLoader
 
   @override
   void initState() {
     super.initState();
+    transferLoader = TokenTransferLoader(
+        tokenService: TokenService(), contractAddress: widget.contractAddress);
     _loadInitialTransfers();
   }
 
@@ -33,21 +32,12 @@ class TokenTransfersState extends State<TokenTransfers> {
       hasError = false;
     });
 
-    final tokenService = TokenService();
-
     try {
-      final Map<String, dynamic> response =
-          await tokenService.fetchTokenTransfers(
-              widget.contractAddress, itemsToLoad, currentOffset);
-
+      displayedTransfers = await transferLoader.loadInitialTransfers();
       setState(() {
-        displayedTransfers = response['transfersData'];
-        currentOffset += itemsToLoad;
         isLoadingInitial = false;
       });
     } catch (error) {
-      Logger logger = Logger();
-      logger.e("Error loading initial transfers: $error");
       setState(() {
         isLoadingInitial = false;
         hasError = true;
@@ -67,8 +57,7 @@ class TokenTransfersState extends State<TokenTransfers> {
 
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
-        if (!isLoadingMore &&
-            scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+        if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
           _loadMoreTransfers();
         }
         return false;
@@ -82,55 +71,16 @@ class TokenTransfersState extends State<TokenTransfers> {
           ),
           const SizedBox(height: 16),
           displayedTransfers.isNotEmpty
-              ? Column(
-                  children: displayedTransfers.map<Widget>((transfer) {
-                    return Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8.0),
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      color: _getRandomColor(), // Set a random vibrant color
-                      child: ListTile(
-                        title: Text(
-                          'From: ${transfer['from']} To: ${transfer['to']}',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Amount: ${formatAmount(transfer['change_amount'])}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              'Signature: ${transfer['signature']}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            Text(
-                              'Time: ${formatTime(transfer['time'])}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
+              ? TransferList(
+                  transfers: displayedTransfers,
+                  getRandomColor: _getRandomColor,
+                  isLoadingMore: transferLoader.pagination.isLoadingMore,
                 )
               : const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Text('No recent transfers available.'),
                 ),
-          if (isLoadingMore)
+          if (transferLoader.pagination.isLoadingMore)
             const Padding(
               padding: EdgeInsets.all(16.0),
               child: Center(child: CircularProgressIndicator()),
@@ -141,7 +91,6 @@ class TokenTransfersState extends State<TokenTransfers> {
   }
 
   Color _getRandomColor() {
-    // You can define your own vibrant color palette
     List<Color> colors = [
       Colors.blueAccent,
       Colors.greenAccent,
@@ -154,28 +103,9 @@ class TokenTransfersState extends State<TokenTransfers> {
   }
 
   void _loadMoreTransfers() async {
+    final newTransfers = await transferLoader.loadMoreTransfers();
     setState(() {
-      isLoadingMore = true;
+      displayedTransfers.addAll(newTransfers);
     });
-
-    try {
-      final tokenService = TokenService();
-      final Map<String, dynamic> response =
-          await tokenService.fetchTokenTransfers(
-              widget.contractAddress, itemsToLoad, currentOffset);
-
-      setState(() {
-        displayedTransfers.addAll(response['transfersData']);
-        currentOffset += itemsToLoad;
-        isLoadingMore = false;
-      });
-    } catch (error) {
-      Logger logger = Logger();
-      logger.e("Error loading more transfers: $error");
-      setState(() {
-        isLoadingMore = false;
-        hasError = true;
-      });
-    }
   }
 }
