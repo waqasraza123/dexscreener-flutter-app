@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../../services/token_service.dart';
 
 class TokenTransfers extends StatefulWidget {
@@ -14,6 +15,8 @@ class TokenTransfersState extends State<TokenTransfers> {
   List<dynamic> displayedTransfers = [];
   int itemsToLoad = 10;
   bool isLoadingMore = false;
+  bool isLoadingInitial = true; // To track initial loading
+  bool hasError = false; // To track any errors
   int currentOffset = 0; // To track the current offset
 
   @override
@@ -24,18 +27,44 @@ class TokenTransfersState extends State<TokenTransfers> {
 
   // Load initial transfers from the API
   Future<void> _loadInitialTransfers() async {
-    final tokenService = TokenService();
-    List<dynamic> transfers = await tokenService.fetchTokenTransfers(
-        widget.contractAddress, itemsToLoad, currentOffset);
-
     setState(() {
-      displayedTransfers = transfers;
-      currentOffset += itemsToLoad; // Update the offset for next loading
+      isLoadingInitial = true;
+      hasError = false;
     });
+
+    final tokenService = TokenService();
+
+    try {
+      final Map<String, dynamic> response =
+          await tokenService.fetchTokenTransfers(
+              widget.contractAddress, itemsToLoad, currentOffset);
+
+      setState(() {
+        displayedTransfers = response[
+            'transfersData']; // Assuming 'transfersData' is the key in your API response
+        currentOffset += itemsToLoad; // Update the offset for next loading
+        isLoadingInitial = false;
+      });
+    } catch (error) {
+      Logger logger = Logger();
+      logger.e("Error loading initial transfers: $error");
+      setState(() {
+        isLoadingInitial = false;
+        hasError = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isLoadingInitial) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (hasError) {
+      return const Center(child: Text('Error loading transfers data.'));
+    }
+
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification scrollInfo) {
         if (!isLoadingMore &&
@@ -85,17 +114,25 @@ class TokenTransfersState extends State<TokenTransfers> {
       isLoadingMore = true;
     });
 
-    // Simulate a loading delay
-    Future.delayed(const Duration(seconds: 2), () async {
+    try {
       final tokenService = TokenService();
-      List<dynamic> transfers = await tokenService.fetchTokenTransfers(
-          widget.contractAddress, itemsToLoad, currentOffset);
+      final Map<String, dynamic> response =
+          await tokenService.fetchTokenTransfers(
+              widget.contractAddress, itemsToLoad, currentOffset);
 
       setState(() {
-        displayedTransfers.addAll(transfers);
+        displayedTransfers
+            .addAll(response['transfersData']); // Add new transfers
         currentOffset += itemsToLoad; // Update the offset for next loading
         isLoadingMore = false;
       });
-    });
+    } catch (error) {
+      Logger logger = Logger();
+      logger.e("Error loading more transfers: $error");
+      setState(() {
+        isLoadingMore = false;
+        hasError = true; // Set error state if loading fails
+      });
+    }
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:logger/logger.dart';
 
 class TokenService {
   final String baseUrl = '${dotenv.env['API_BASE_URL']}/dex/tokens/token/';
@@ -21,7 +20,7 @@ class TokenService {
   }
 
   // Method to fetch token transfers with pagination support
-  Future<List<dynamic>> fetchTokenTransfers(
+  Future<Map<String, dynamic>> fetchTokenTransfers(
       String contractAddress, int limit, int offset) async {
     final String url =
         '$baseUrl$contractAddress/transfers?limit=$limit&offset=$offset';
