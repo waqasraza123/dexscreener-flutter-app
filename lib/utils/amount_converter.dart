@@ -16,8 +16,10 @@ double convertToReadableAmount(dynamic amount) {
     return numericAmount / 1e9; // Billions
   } else if (numericAmount >= 1e6) {
     return numericAmount / 1e6; // Millions
+  } else if (numericAmount >= 1e3) {
+    return numericAmount / 1e3; // Thousands
   }
-  return numericAmount; // Less than a million
+  return numericAmount; // Less than a thousand
 }
 
 String formatAmount(dynamic amount) {
@@ -44,6 +46,9 @@ String formatAmount(dynamic amount) {
   } else if (numericAmount >= 1e6) {
     suffix = 'M'; // Million
     convertedAmount = numericAmount / 1e6;
+  } else if (numericAmount >= 1e3) {
+    suffix = 'K'; // Thousand
+    convertedAmount = numericAmount / 1e3;
   } else {
     suffix = ''; // No suffix
     convertedAmount = numericAmount;

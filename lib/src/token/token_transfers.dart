@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../../services/token_service.dart';
+import '../../utils/amount_converter.dart';
+import '../../utils/time_converter.dart';
 
 class TokenTransfers extends StatefulWidget {
   final String contractAddress;
@@ -15,17 +17,16 @@ class TokenTransfersState extends State<TokenTransfers> {
   List<dynamic> displayedTransfers = [];
   int itemsToLoad = 10;
   bool isLoadingMore = false;
-  bool isLoadingInitial = true; // To track initial loading
-  bool hasError = false; // To track any errors
-  int currentOffset = 0; // To track the current offset
+  bool isLoadingInitial = true;
+  bool hasError = false;
+  int currentOffset = 0;
 
   @override
   void initState() {
     super.initState();
-    _loadInitialTransfers(); // Load initial transfers
+    _loadInitialTransfers();
   }
 
-  // Load initial transfers from the API
   Future<void> _loadInitialTransfers() async {
     setState(() {
       isLoadingInitial = true;
@@ -40,9 +41,8 @@ class TokenTransfersState extends State<TokenTransfers> {
               widget.contractAddress, itemsToLoad, currentOffset);
 
       setState(() {
-        displayedTransfers = response[
-            'transfersData']; // Assuming 'transfersData' is the key in your API response
-        currentOffset += itemsToLoad; // Update the offset for next loading
+        displayedTransfers = response['transfersData'];
+        currentOffset += itemsToLoad;
         isLoadingInitial = false;
       });
     } catch (error) {
@@ -69,28 +69,60 @@ class TokenTransfersState extends State<TokenTransfers> {
       onNotification: (ScrollNotification scrollInfo) {
         if (!isLoadingMore &&
             scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-          _loadMoreTransfers(); // Load more transfers when scrolled to the bottom
+          _loadMoreTransfers();
         }
         return false;
       },
       child: ListView(
+        padding: const EdgeInsets.all(16.0),
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Recent Transfers',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
+          const Text(
+            'Recent Transfers',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 16),
           displayedTransfers.isNotEmpty
               ? Column(
                   children: displayedTransfers.map<Widget>((transfer) {
-                    return ListTile(
-                      title: Text(
-                          'From: ${transfer['from']} To: ${transfer['to']}'),
-                      subtitle: Text(
-                          'Amount: ${transfer['amount']} Date: ${transfer['date']}'),
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8.0),
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: _getRandomColor(), // Set a random vibrant color
+                      child: ListTile(
+                        title: Text(
+                          'From: ${transfer['from']} To: ${transfer['to']}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Amount: ${formatAmount(transfer['change_amount'])}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              'Signature: ${transfer['signature']}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white70,
+                              ),
+                            ),
+                            Text(
+                              'Time: ${formatTime(transfer['time'])}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   }).toList(),
                 )
@@ -108,7 +140,19 @@ class TokenTransfersState extends State<TokenTransfers> {
     );
   }
 
-  // Load more transfers when the user scrolls to the bottom
+  Color _getRandomColor() {
+    // You can define your own vibrant color palette
+    List<Color> colors = [
+      Colors.blueAccent,
+      Colors.greenAccent,
+      Colors.redAccent,
+      Colors.orangeAccent,
+      Colors.purpleAccent,
+      Colors.tealAccent,
+    ];
+    return colors[DateTime.now().millisecondsSinceEpoch % colors.length];
+  }
+
   void _loadMoreTransfers() async {
     setState(() {
       isLoadingMore = true;
@@ -121,9 +165,8 @@ class TokenTransfersState extends State<TokenTransfers> {
               widget.contractAddress, itemsToLoad, currentOffset);
 
       setState(() {
-        displayedTransfers
-            .addAll(response['transfersData']); // Add new transfers
-        currentOffset += itemsToLoad; // Update the offset for next loading
+        displayedTransfers.addAll(response['transfersData']);
+        currentOffset += itemsToLoad;
         isLoadingMore = false;
       });
     } catch (error) {
@@ -131,7 +174,7 @@ class TokenTransfersState extends State<TokenTransfers> {
       logger.e("Error loading more transfers: $error");
       setState(() {
         isLoadingMore = false;
-        hasError = true; // Set error state if loading fails
+        hasError = true;
       });
     }
   }
