@@ -14,7 +14,7 @@ class TransferCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8), // Margin between cards
-      height: 200,
+      height: 250, // Increased height to reduce overflow
       width: double.infinity,
       padding: const EdgeInsets.all(16), // Adjusted padding
       decoration: BoxDecoration(
@@ -33,7 +33,6 @@ class TransferCard extends StatelessWidget {
       child: SingleChildScrollView(
         // Add scroll view
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -47,9 +46,15 @@ class TransferCard extends StatelessWidget {
                     style: const TextStyle(
                       color: Colors.white,
                       fontFamily: "monospace",
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 8), // Spacing between rows
+            Row(
+              children: [
                 const Icon(Icons.arrow_forward,
                     color: Colors.white), // Arrow icon for transfer direction
                 const SizedBox(width: 8), // Spacing between icons
@@ -59,36 +64,67 @@ class TransferCard extends StatelessWidget {
                     style: const TextStyle(
                       color: Colors.white,
                       fontFamily: "monospace",
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ],
             ),
-            Text(
-              'Amount: ${formatAmount(transfer['change_amount'])}',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontFamily: "monospace",
-              ),
+            const SizedBox(height: 8), // Spacing between rows
+            Row(
+              children: [
+                const Icon(Icons.swap_horiz,
+                    color: Colors.white), // Icon for "Amount"
+                const SizedBox(width: 8), // Spacing between icon and text
+                Expanded(
+                  child: Text(
+                    'Amount: ${formatAmount(transfer['change_amount'])}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontFamily: "monospace",
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Text(
-              'Signature: ${transfer['signature']}',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
-                fontFamily: "monospace",
-              ),
+            const SizedBox(height: 8), // Spacing between rows
+            Row(
+              children: [
+                const Icon(Icons.file_copy,
+                    color: Colors.white), // Icon for "Signature"
+                const SizedBox(width: 8), // Spacing between icon and text
+                Expanded(
+                  child: Text(
+                    'Signature: ${transfer['signature']}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.white70,
+                      fontFamily: "monospace",
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Text(
-              'Time: ${formatTime(transfer['time'])}',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
-                fontFamily: "monospace",
-              ),
+            const SizedBox(height: 8), // Spacing between rows
+            Row(
+              children: [
+                const Icon(Icons.access_time,
+                    color: Colors.white), // Icon for "Time"
+                const SizedBox(width: 8), // Spacing between icon and text
+                Expanded(
+                  child: Text(
+                    'Time: ${formatTime(transfer['time'])}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.white70,
+                      fontFamily: "monospace",
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8), // Spacing between content and bottom
           ],
         ),
       ),
