@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
+import 'package:magic_sdk/magic_sdk.dart';
+import '../utils/magic_link_init.dart';
 
 class AuthService {
   final String apiBaseURL = dotenv.env['API_BASE_URL'] ?? '';
@@ -74,5 +76,27 @@ class AuthService {
         'message': 'An error occurred. $e',
       };
     }
+  }
+
+  // method for login with email OTP
+  Future<Map<String, dynamic>> loginWithEmailOTP(String email) async {
+    Logger logger = Logger();
+    logger.i("coming here");
+    logger.i(MagicLinkInit.magic);
+    //try {
+
+    final aa = await MagicLinkInit.magic.auth.loginWithEmailOTP(email: email);
+
+    logger.i(aa);
+    return {
+      'success': true,
+      'message': 'OTP sent to your email. Please check your inbox.',
+    };
+    // } catch (e) {
+    //   return {
+    //     'success': false,
+    //     'message': 'An error occurred: $e',
+    //   };
+    // }
   }
 }

@@ -140,6 +140,20 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                 const SizedBox(height: 16),
+                // New button to navigate to Email OTP Login Screen
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/email-otp-login');
+                  },
+                  child: const Text(
+                    'Login with Email OTP',
+                    style: TextStyle(
+                      color: deepBlue,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
                 TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/register');

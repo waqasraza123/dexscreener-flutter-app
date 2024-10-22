@@ -20,7 +20,7 @@ class TransferCard extends StatelessWidget {
       ],
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 8), // Margin between cards
-        height: 250, // Increased height to reduce overflow
+        height: 270, // Increased height to reduce overflow
         width: double.infinity,
         padding: const EdgeInsets.all(16), // Adjusted padding
         decoration: BoxDecoration(

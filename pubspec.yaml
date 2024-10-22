@@ -1,5 +1,5 @@
 name: dexscreener_flutter
-description: "Decentralized Echange Tokens | Analysis | Predictions | Trends."
+description: "Decentralized Exchange Tokens | Analysis | Predictions | Trends."
 publish_to: 'none' 
 version: 1.0.0+1
 
@@ -22,6 +22,9 @@ dependencies:
   intl: ^0.17.0
   purchases_flutter: ^6.0.0
   flutter_animate: ^4.5.0
+  magic_sdk: ^6.0.1
+  webview_flutter: ^4.9.0
+  webview_flutter_wkwebview: ^3.16.0
 
 dev_dependencies:
   flutter_test:
