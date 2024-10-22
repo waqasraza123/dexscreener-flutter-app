@@ -20,9 +20,13 @@ dependencies:
   provider: ^6.1.2
   shared_preferences: ^2.3.2
   intl: ^0.17.0
-  purchases_flutter: ^6.0.0
+  purchases_flutter: ^5.0.0
   flutter_animate: ^4.5.0
   magic_sdk: ^6.0.1
+  webview_flutter: ^4.9.0
+  webview_flutter_android: ^3.16.9
+  webview_flutter_wkwebview: ^3.16.0
+  webview_flutter_web: ^0.2.3+2
 
 dev_dependencies:
   flutter_test:
