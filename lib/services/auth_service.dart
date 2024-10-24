@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:logger/logger.dart';
-// import 'package:magic_sdk/magic_sdk.dart';
+import 'package:magic_sdk/magic_sdk.dart';
 
 class AuthService {
   final String apiBaseURL = dotenv.env['API_BASE_URL'] ?? '';
-  // final Magic magic = Magic.instance;
 
   Future<Map<String, dynamic>> register(String email, String password) async {
     final registerUrl = Uri.parse('$apiBaseURL/auth/register');
@@ -81,20 +80,23 @@ class AuthService {
   // method for login with email OTP
   Future<Map<String, dynamic>> loginWithEmailOTP(String email) async {
     Logger logger = Logger();
-    logger.i("coming here");
-    //try {
-    //final aa = await magic.auth.loginWithEmailOTP(email: email);
 
-    //logger.i(aa);
-    return {
-      'success': true,
-      'message': 'OTP sent to your email. Please check your inbox.',
-    };
-    // } catch (e) {
-    //   return {
-    //     'success': false,
-    //     'message': 'An error occurred: $e',
-    //   };
-    // }
+    logger.i("sending otp");
+    try {
+      logger.i("inside try block");
+      var magic = Magic.instance;
+      await magic.auth.loginWithEmailOTP(email: email);
+
+      logger.i("OTP sent successfully to $email");
+
+      return {'success': true, 'message': 'OTP sent to $email'};
+    } catch (e, stacktrace) {
+      logger.e("Error occurred: $e");
+      logger.e("Stacktrace: $stacktrace");
+
+      return {'success': false, 'message': 'Failed to send OTP'};
+    } finally {
+      logger.i("OTP send process completed."); // Log when done
+    }
   }
 }

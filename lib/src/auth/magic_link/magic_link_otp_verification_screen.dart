@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:magic_sdk/magic_sdk.dart';
 
 class MagicLinkOtpVerificationScreen extends StatefulWidget {
-  final String email;
-
-  const MagicLinkOtpVerificationScreen({super.key, required this.email});
+  const MagicLinkOtpVerificationScreen({super.key});
 
   @override
   MagicLinkOTPVerificationScreenState createState() =>

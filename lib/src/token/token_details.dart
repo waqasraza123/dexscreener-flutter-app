@@ -1,5 +1,3 @@
-// lib/widgets/token_card/token_details.dart
-
 import 'package:flutter/material.dart';
 import '../../utils/colors.dart';
 

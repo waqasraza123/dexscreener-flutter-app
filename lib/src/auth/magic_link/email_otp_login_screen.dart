@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../../../services/auth_service.dart';
 import 'magic_link_otp_verification_screen.dart';
 
@@ -16,16 +17,19 @@ class MagicLinkEmailOTPLoginScreenState
   String _message = '';
 
   Future<void> _loginWithEmailOTP() async {
+    Logger logger = Logger();
+
     final authService = AuthService();
     final response = await authService.loginWithEmailOTP(_emailController.text);
+
+    logger.i(response);
 
     if (response['success']) {
       // Navigate to the OTP verification screen
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              MagicLinkOtpVerificationScreen(email: _emailController.text),
+          builder: (context) => const MagicLinkOtpVerificationScreen(),
         ),
       );
     } else {

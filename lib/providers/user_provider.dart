@@ -1,4 +1,4 @@
-import 'package:dexscreener_flutter/models/user.dart';
+import '../models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
