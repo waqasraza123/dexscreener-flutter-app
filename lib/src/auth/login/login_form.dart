@@ -1,4 +1,6 @@
+import 'package:dexscreener_flutter/src/main/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:magic_sdk/magic_sdk.dart';
 import '../../../services/auth_service.dart';
 import '../../../utils/button.dart';
 import '../../../utils/colors.dart';
@@ -22,6 +24,18 @@ class LoginFormState extends State<LoginForm> {
   String? _otpEmail;
   bool _isOtpMode = false;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    var future = Magic.instance.user.isLoggedIn();
+    future.then((isLoggedIn) {
+      if (isLoggedIn) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const MainScreen()));
+      }
+    });
+  }
 
   Future<void> _login(BuildContext context) async {
     if (_formKey.currentState!.validate()) {

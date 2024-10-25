@@ -34,8 +34,6 @@ class LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-
-              // Conditionally show either Login or OTP form
               LoginForm(
                 authService: _authService,
               ),
