@@ -1,4 +1,5 @@
 import 'package:dexscreener_flutter/src/main/main_screen.dart';
+import 'package:dexscreener_flutter/src/user/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:magic_sdk/magic_sdk.dart';
 import '../../../services/auth_service.dart';
@@ -32,7 +33,7 @@ class LoginFormState extends State<LoginForm> {
     future.then((isLoggedIn) {
       if (isLoggedIn) {
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const MainScreen()));
+            MaterialPageRoute(builder: (context) => const ProfileScreen()));
       }
     });
   }

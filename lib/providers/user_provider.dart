@@ -1,3 +1,4 @@
+import 'package:magic_sdk/magic_sdk.dart';
 import '../models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -51,6 +52,8 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> logoutUser() async {
+    await Magic.instance.user.logout();
+
     _user = null;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('email');
