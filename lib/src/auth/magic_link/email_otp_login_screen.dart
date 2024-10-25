@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import '../../../services/auth_service.dart';
-import 'magic_link_otp_verification_screen.dart';
+import 'package:magic_sdk/magic_sdk.dart';
 
 class MagicLinkEmailOTPLoginScreen extends StatefulWidget {
   const MagicLinkEmailOTPLoginScreen({super.key});
@@ -19,30 +18,22 @@ class MagicLinkEmailOTPLoginScreenState
   Future<void> _loginWithEmailOTP() async {
     Logger logger = Logger();
 
-    final authService = AuthService();
-    final response = await authService.loginWithEmailOTP(_emailController.text);
-
-    logger.i(response);
-
-    if (response['success']) {
-      // Navigate to the OTP verification screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MagicLinkOtpVerificationScreen(),
-        ),
-      );
-    } else {
-      setState(() {
-        _message = response['message'];
-      });
+    try {
+      var magic = Magic.instance;
+      await magic.auth.loginWithEmailOTP(email: _emailController.text);
+      Navigator.pop(context);
+    } catch (e) {
+      print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login with Email OTP')),
+      appBar: AppBar(
+        title: const Text('Login with Email OTP'),
+        automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

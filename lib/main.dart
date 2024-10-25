@@ -13,15 +13,15 @@ import 'src/auth/magic_link/magic_link_otp_verification_screen.dart';
 Future<void> main() async {
   await dotenv.load(fileName: "assets/config/.env");
 
-  // Initialize Magic Link
-  Magic.instance = Magic(dotenv.env['MAGIC_LINK_PUBLISHABLE_KEY']!);
-
   runApp(
     ChangeNotifierProvider(
       create: (context) => UserProvider()..loadUser(),
       child: const MyApp(),
     ),
   );
+
+  // Initialize Magic Link
+  Magic.instance = Magic(dotenv.env['MAGIC_LINK_PUBLISHABLE_KEY']!);
 }
 
 class MyApp extends StatelessWidget {
