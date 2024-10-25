@@ -102,10 +102,6 @@ class RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-        backgroundColor: Colors.white,
-      ),
       backgroundColor: Colors.white,
       body: Center(
         child: Padding(
@@ -120,7 +116,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.normal,
-                    color: deepBlue, // Deep blue for title text
+                    color: customBlack, // Deep blue for title text
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -173,7 +169,7 @@ class RegisterScreenState extends State<RegisterScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50),
                           ),
-                          backgroundColor: skyBlue,
+                          backgroundColor: brightBlue,
                         ),
                         child: const Text(
                           'Register',

@@ -8,24 +8,27 @@ class Button extends StatelessWidget {
   const Button({
     required this.text,
     required this.onPressed,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+    return IntrinsicWidth(
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+          backgroundColor: brightBlue,
         ),
-        backgroundColor: brightGreen,
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 18,
-          color: Colors.white,
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+          ),
         ),
       ),
     );

@@ -53,3 +53,5 @@ web/
 .packages
 
 .env
+analysis_options.yaml
+devtools_options.yaml
