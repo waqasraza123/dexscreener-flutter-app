@@ -1,4 +1,5 @@
 import 'package:dexscreener_flutter/providers/user_provider.dart';
+import 'package:dexscreener_flutter/src/user/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:magic_sdk/magic_sdk.dart';
@@ -7,8 +8,6 @@ import './src/auth/login_screen.dart';
 import './src/auth/register_screen.dart';
 import './src/main/main_screen.dart';
 import './src/main/theme.dart';
-import 'src/auth/magic_link/email_otp_login_screen.dart';
-import 'src/auth/magic_link/magic_link_otp_verification_screen.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/config/.env");
@@ -36,9 +35,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
-        '/email-otp-login': (context) => const MagicLinkEmailOTPLoginScreen(),
-        '/email-otp-login-confirmation': (context) =>
-            const MagicLinkOtpVerificationScreen()
+        '/profile': (context) => const ProfileScreen(),
       },
     );
   }

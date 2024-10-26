@@ -8,6 +8,7 @@ class UserProvider with ChangeNotifier {
   User? _user;
 
   User? get user => _user;
+  final Logger logger = Logger();
 
   Future<void> loadUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -24,8 +25,7 @@ class UserProvider with ChangeNotifier {
       _user = User(
         email: email,
         uid: uid,
-        displayName:
-            null, // You can adjust this if you have a way to store/display names
+        displayName: null,
         accessToken: accessToken,
         refreshToken: refreshToken,
       );
@@ -35,24 +35,26 @@ class UserProvider with ChangeNotifier {
 
   void setUser(User user) {
     _user = user;
-    final Logger logger = Logger();
 
     SharedPreferences.getInstance().then((prefs) {
-      // Log the user email for debugging
-      logger.i(user);
-
       // Save user details in SharedPreferences
       prefs.setString('email', user.email);
       prefs.setString('uid', user.uid);
       prefs.setString('accessToken', user.accessToken);
-      prefs.setString('refreshToken', user.refreshToken);
+      if (user.refreshToken != null) {
+        prefs.setString('refreshToken', user.refreshToken!);
+      }
 
       notifyListeners();
     });
   }
 
   Future<void> logoutUser() async {
-    await Magic.instance.user.logout();
+    try {
+      await Magic.instance.user.logout();
+    } catch (e) {
+      logger.i("failed to logout");
+    }
 
     _user = null;
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -60,6 +62,7 @@ class UserProvider with ChangeNotifier {
     await prefs.remove('uid');
     await prefs.remove('accessToken');
     await prefs.remove('refreshToken');
+
     notifyListeners();
   }
 }

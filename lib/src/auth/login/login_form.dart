@@ -1,5 +1,4 @@
 import 'package:dexscreener_flutter/src/main/main_screen.dart';
-import 'package:dexscreener_flutter/src/user/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:magic_sdk/magic_sdk.dart';
 import '../../../services/auth_service.dart';
@@ -25,15 +24,18 @@ class LoginFormState extends State<LoginForm> {
   String? _otpEmail;
   bool _isOtpMode = false;
   bool _isLoading = false;
+  Magic magic = Magic.instance;
 
   @override
   void initState() {
     super.initState();
-    var future = Magic.instance.user.isLoggedIn();
+    setState(() => _isLoading = true);
+    var future = magic.user.isLoggedIn();
     future.then((isLoggedIn) {
       if (isLoggedIn) {
+        setState(() => _isLoading = false);
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const ProfileScreen()));
+            MaterialPageRoute(builder: (context) => const MainScreen()));
       }
     });
   }
@@ -50,7 +52,14 @@ class LoginFormState extends State<LoginForm> {
   Future<void> _loginWithOtp(BuildContext context) async {
     if (_otpEmail != null && _otpEmail!.isNotEmpty) {
       setState(() => _isLoading = true);
-      await widget.authService.loginWithEmailOTP(_otpEmail!);
+
+      var token = await magic.auth.loginWithEmailOTP(email: _otpEmail!);
+
+      if (token.isNotEmpty) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const MainScreen()));
+      }
+
       setState(() => _isLoading = false);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
