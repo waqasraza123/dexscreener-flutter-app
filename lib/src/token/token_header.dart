@@ -46,11 +46,16 @@ class TokenHeader extends StatelessWidget {
   }
 
   Widget _buildTokenSymbol() {
+    final tokenSymbol =
+        token['token']['tokenSymbol']?.toUpperCase() ?? 'UNKNOWN';
     return Row(
       children: [
         Text(
-          token['token']['tokenSymbol']?.toUpperCase() ?? 'UNKNOWN',
+          tokenSymbol.length > 5
+              ? '${tokenSymbol.substring(0, 5)}...'
+              : tokenSymbol,
           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          overflow: TextOverflow.ellipsis,
         ),
         const SizedBox(width: 4),
         const Text('/',
