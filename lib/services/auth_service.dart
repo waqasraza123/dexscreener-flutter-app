@@ -41,8 +41,8 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
+    Logger logger = Logger();
     final loginUrl = Uri.parse('$apiBaseURL/auth/login');
-    final Logger logger = Logger();
 
     try {
       final response = await http.post(
@@ -57,10 +57,14 @@ class AuthService {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
+        // Extract the user data from the response
+        final userData = data['user'];
+        logger.i(userData);
+
         return {
           'success': true,
           'message': 'Login successful.',
-          'data': data['user'],
+          'data': userData,
         };
       } else {
         return {
@@ -69,6 +73,7 @@ class AuthService {
         };
       }
     } catch (e) {
+      logger.e('An error occurred during login: $e');
       return {
         'success': false,
         'message': 'An error occurred. $e',

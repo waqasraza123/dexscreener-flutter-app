@@ -1,7 +1,10 @@
+import 'package:dexscreener_flutter/providers/user_provider.dart';
 import 'package:dexscreener_flutter/src/main/main_screen.dart';
 import 'package:dexscreener_flutter/src/user/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:magic_sdk/magic_sdk.dart';
+import 'package:provider/provider.dart';
+import '../../../models/user.dart';
 import '../../../services/auth_service.dart';
 import '../../../utils/button.dart';
 import '../../../utils/colors.dart';
@@ -46,8 +49,39 @@ class LoginFormState extends State<LoginForm> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() => _isLoading = true);
-      await widget.authService.loginUser(_email!, _password!);
+
+      // Call loginUser from AuthService
+      final loginResponse =
+          await widget.authService.loginUser(_email!, _password!);
+
       setState(() => _isLoading = false);
+
+      // Check if login was successful
+      if (loginResponse['success'] == true) {
+        // Get the user data from the response
+        final userData = loginResponse['data'];
+
+        // Use the UserProvider to set the user
+        final userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUser(User(
+          email: userData['email'],
+          uid: userData['uid'],
+          displayName: (userData['displayName'] ?? '').toString(),
+          accessToken: userData['stsTokenManager']['accessToken'],
+          refreshToken: userData['stsTokenManager']['refreshToken'],
+        ));
+
+        // Redirect to MainScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+      } else {
+        // Show an error message if login failed
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(loginResponse['message'])),
+        );
+      }
     }
   }
 
