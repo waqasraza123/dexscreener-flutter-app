@@ -39,6 +39,7 @@ class LoginFormState extends State<LoginForm> {
             MaterialPageRoute(builder: (context) => const ProfileScreen()));
       }
     });
+    setState(() => _isLoading = false);
   }
 
   Future<void> _login(BuildContext context) async {
