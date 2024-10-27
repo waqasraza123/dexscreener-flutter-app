@@ -6,6 +6,7 @@ import './chat/token_messages_screen.dart';
 import './token/token_holders.dart';
 import './token/token_transfers.dart';
 import './token/token_overview.dart';
+import '../utils/colors.dart';
 
 class SingleTokenScreen extends StatefulWidget {
   final dynamic token;
@@ -112,17 +113,17 @@ class SingleTokenScreenState extends State<SingleTokenScreen> {
             IconButton(
               icon: const Icon(Icons.info),
               onPressed: () => _onItemTapped(0),
-              color: _selectedIndex == 0 ? Colors.blue : Colors.black,
+              color: _selectedIndex == 0 ? brightBlue : customBlack,
             ),
             IconButton(
               icon: const Icon(Icons.people),
               onPressed: () => _onItemTapped(1),
-              color: _selectedIndex == 1 ? Colors.blue : Colors.black,
+              color: _selectedIndex == 1 ? brightBlue : customBlack,
             ),
             IconButton(
               icon: const Icon(Icons.swap_horiz),
               onPressed: () => _onItemTapped(2),
-              color: _selectedIndex == 2 ? Colors.blue : Colors.black,
+              color: _selectedIndex == 2 ? brightBlue : customBlack,
             ),
           ],
         ),
