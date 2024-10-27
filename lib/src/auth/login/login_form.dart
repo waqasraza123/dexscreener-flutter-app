@@ -2,6 +2,7 @@ import 'package:dexscreener_flutter/providers/user_provider.dart';
 import 'package:dexscreener_flutter/src/main/main_screen.dart';
 import 'package:dexscreener_flutter/src/user/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:magic_sdk/magic_sdk.dart';
 import 'package:provider/provider.dart';
 import '../../../models/user.dart';
@@ -29,6 +30,7 @@ class LoginFormState extends State<LoginForm> {
   bool _isOtpMode = false;
   bool _isLoading = false;
   Magic magic = Magic.instance;
+  Logger logger = Logger();
 
   @override
   void initState() {

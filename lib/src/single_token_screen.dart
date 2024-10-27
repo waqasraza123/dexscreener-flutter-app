@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../candlestick_chart/candlestick_chart.dart';
+import '../candlestick_chart/data/candlestick_data.dart';
+import 'package:logger/logger.dart';
 import './chat/token_messages_screen.dart';
 import './token/token_holders.dart';
 import './token/token_transfers.dart';
@@ -15,6 +18,7 @@ class SingleTokenScreen extends StatefulWidget {
 
 class SingleTokenScreenState extends State<SingleTokenScreen> {
   int _selectedIndex = 0;
+  final List<CandleData> _candlestickData = generateCandlestickData();
 
   @override
   void initState() {
@@ -27,11 +31,26 @@ class SingleTokenScreenState extends State<SingleTokenScreen> {
     });
   }
 
+  String _getHeaderImageUrl(String originalUrl) {
+    final int pngIndex = originalUrl.lastIndexOf('.png');
+    if (pngIndex == -1) return originalUrl;
+    return originalUrl.substring(0, pngIndex) +
+        '/header' +
+        originalUrl.substring(pngIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Define the screens corresponding to the tabs
+    Logger logger = Logger();
+
+    String originalImageUrl = widget.token['token']['tokenImageUrl'];
+    logger.i(originalImageUrl);
+
+    String headerImageUrl = _getHeaderImageUrl(originalImageUrl);
+    logger.i('Header Image URL: $headerImageUrl');
+
     final List<Widget> screens = [
-      TokenOverview(token: widget.token), // Overview screen
+      TokenOverview(token: widget.token),
       TokenHolders(contractAddress: widget.token['contract_address']),
       TokenTransfers(contractAddress: widget.token['contract_address']),
     ];
@@ -39,7 +58,8 @@ class SingleTokenScreenState extends State<SingleTokenScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.token['token']['tokenSymbol']?.toUpperCase() ?? 'Token'),
+          widget.token['token']['tokenSymbol']?.toUpperCase() ?? 'Token',
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.message),
@@ -55,7 +75,36 @@ class SingleTokenScreenState extends State<SingleTokenScreen> {
           ),
         ],
       ),
-      body: screens[_selectedIndex], // Display the currently selected screen
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            if (_selectedIndex == 0) ...[
+              Hero(
+                tag: widget.token['contract_address'],
+                child: Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(headerImageUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height:
+                    300, // Set a fixed height for the chart for scrollable space
+                child: InteractiveChart(
+                  candles:
+                      _candlestickData, // Display the generated candlestick data
+                  style: ChartStyle(),
+                ),
+              ),
+            ],
+            screens[_selectedIndex], // Display the selected screen content
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -63,23 +112,17 @@ class SingleTokenScreenState extends State<SingleTokenScreen> {
             IconButton(
               icon: const Icon(Icons.info),
               onPressed: () => _onItemTapped(0),
-              color: _selectedIndex == 0
-                  ? Colors.blue
-                  : Colors.black, // Highlight selected icon
+              color: _selectedIndex == 0 ? Colors.blue : Colors.black,
             ),
             IconButton(
               icon: const Icon(Icons.people),
               onPressed: () => _onItemTapped(1),
-              color: _selectedIndex == 1
-                  ? Colors.blue
-                  : Colors.black, // Highlight selected icon
+              color: _selectedIndex == 1 ? Colors.blue : Colors.black,
             ),
             IconButton(
               icon: const Icon(Icons.swap_horiz),
               onPressed: () => _onItemTapped(2),
-              color: _selectedIndex == 2
-                  ? Colors.blue
-                  : Colors.black, // Highlight selected icon
+              color: _selectedIndex == 2 ? Colors.blue : Colors.black,
             ),
           ],
         ),

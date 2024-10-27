@@ -8,7 +8,7 @@ import './src/auth/login_screen.dart';
 import './src/auth/register_screen.dart';
 import './src/main/main_screen.dart';
 import './src/main/theme.dart';
-import 'utils/webview_setup.dart';
+// import 'utils/webview_setup.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "assets/config/.env");
@@ -23,7 +23,7 @@ Future<void> main() async {
   // Initialize Magic Link
   Magic.instance = Magic(dotenv.env['MAGIC_LINK_PUBLISHABLE_KEY']!);
 
-  setupWebViewPlatform();
+  //setupWebViewPlatform();
 }
 
 class MyApp extends StatelessWidget {

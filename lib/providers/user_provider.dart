@@ -20,10 +20,10 @@ class UserProvider with ChangeNotifier {
     // Check if all necessary fields are available
     if (uid != null) {
       _user = User(
-        email: email,
+        email: email!,
         uid: uid,
         displayName: null,
-        accessToken: accessToken,
+        accessToken: accessToken!,
         refreshToken: refreshToken,
       );
       notifyListeners();
