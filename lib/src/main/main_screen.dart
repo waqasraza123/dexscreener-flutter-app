@@ -5,6 +5,7 @@ import '../data_screen.dart';
 import '../user/profile_screen.dart';
 import '../auth/login_screen.dart';
 import 'bottom_navigation.dart';
+import '../token/gecko/gecko_tokens_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -28,12 +29,13 @@ class MainScreenState extends State<MainScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final bool isLoggedIn = userProvider.user?.accessToken != null;
 
-    // Define the two screens for the bottom navigation: Home and Profile/Login
+    // Define the three screens for the bottom navigation: Home, Profile/Login, GeckoTokens
     final List<Widget> screens = [
       const DataScreen(), // Home screen
       isLoggedIn
           ? const ProfileScreen()
           : const LoginScreen(), // Profile or Login
+      const GeckoTokensScreen(), // New GeckoTokensScreen
     ];
 
     return Scaffold(
@@ -60,7 +62,7 @@ class MainScreenState extends State<MainScreen> {
         elevation: 5,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        items: buildBottomNavBarItems(isLoggedIn), // Use external method
+        items: buildBottomNavBarItems(isLoggedIn), // Updated method call
       ),
     );
   }
@@ -72,6 +74,8 @@ class MainScreenState extends State<MainScreen> {
         return 'My Dashboard';
       case 1:
         return isLoggedIn ? 'Profile' : 'Login';
+      case 2:
+        return 'Trending Cryptocurrencies';
       default:
         return '';
     }
