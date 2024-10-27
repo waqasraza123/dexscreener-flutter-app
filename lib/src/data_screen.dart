@@ -11,86 +11,85 @@ class DataScreen extends StatefulWidget {
 
 class DataScreenState extends State<DataScreen> {
   final DexApiService apiService = DexApiService();
-  late Future<List<dynamic>> dexData;
   List<dynamic> tokens = [];
-  int itemsToLoad = 10; // Initial number of tokens to load
-  int currentItemCount = 0; // Keeps track of how many tokens are loaded
+  int itemsToLoad = 10; // Number of tokens to load per request
+  int currentOffset = 0; // Tracks the current offset for pagination
+  int totalTokens = 0; // Total number of tokens available
   bool isLoadingMore = false;
 
   @override
   void initState() {
     super.initState();
-    dexData = apiService.fetchDexData();
+    _loadInitialTokens();
+  }
+
+  Future<void> _loadInitialTokens() async {
+    try {
+      final response =
+          await apiService.fetchDexData(itemsToLoad, currentOffset);
+      setState(() {
+        tokens = response['tokensData'];
+        totalTokens = response['total'];
+        currentOffset += itemsToLoad;
+      });
+    } catch (e) {
+      print('Error loading tokens: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<List<dynamic>>(
-        future: dexData,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No Data Found'));
-          }
-
-          // Load initial set of tokens
-          if (tokens.isEmpty) {
-            tokens = snapshot.data!.take(itemsToLoad).toList();
-            currentItemCount = tokens.length;
-          }
-
-          return NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification scrollInfo) {
-              if (!isLoadingMore &&
-                  scrollInfo.metrics.pixels ==
-                      scrollInfo.metrics.maxScrollExtent) {
-                _loadMoreTokens(snapshot.data!);
-              }
-              return false;
-            },
-            child: ListView.builder(
-              itemCount: tokens.length + (isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == tokens.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
+      body: tokens.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : NotificationListener<ScrollNotification>(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (!isLoadingMore &&
+                    scrollInfo.metrics.pixels ==
+                        scrollInfo.metrics.maxScrollExtent) {
+                  _loadMoreTokens();
                 }
-
-                var token = tokens[index];
-                return TokenCard(token: token);
+                return false;
               },
+              child: ListView.builder(
+                itemCount: tokens.length + (isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index == tokens.length) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  var token = tokens[index];
+                  return TokenCard(token: token);
+                },
+              ),
             ),
-          );
-        },
-      ),
     );
   }
 
   // Load more tokens when the user scrolls to the bottom
-  void _loadMoreTokens(List<dynamic> allTokens) async {
-    if (currentItemCount >= allTokens.length) return;
+  void _loadMoreTokens() async {
+    if (currentOffset >= totalTokens) return; // Stop if all tokens are loaded
 
     setState(() {
       isLoadingMore = true;
     });
 
-    await Future.delayed(
-        const Duration(seconds: 2)); // Simulate delay for loading
-
-    setState(() {
-      int nextItemCount = currentItemCount + itemsToLoad;
-      if (nextItemCount > allTokens.length) {
-        nextItemCount = allTokens.length;
-      }
-      tokens.addAll(allTokens.getRange(currentItemCount, nextItemCount));
-      currentItemCount = tokens.length;
-      isLoadingMore = false;
-    });
+    try {
+      final response =
+          await apiService.fetchDexData(itemsToLoad, currentOffset);
+      setState(() {
+        tokens.addAll(response['tokensData']);
+        currentOffset += itemsToLoad;
+      });
+    } catch (e) {
+      print('Error loading more tokens: $e');
+    } finally {
+      setState(() {
+        isLoadingMore = false;
+      });
+    }
   }
 }

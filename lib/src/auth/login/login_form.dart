@@ -40,9 +40,10 @@ class LoginFormState extends State<LoginForm> {
         setState(() => _isLoading = false);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const ProfileScreen()));
+      } else {
+        setState(() => _isLoading = false);
       }
     });
-    setState(() => _isLoading = false);
   }
 
   Future<void> _login(BuildContext context) async {
@@ -61,7 +62,6 @@ class LoginFormState extends State<LoginForm> {
         // Get the user data from the response
         final userData = loginResponse['data'];
 
-        // Use the UserProvider to set the user
         final userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(User(
           email: userData['email'],
@@ -71,7 +71,6 @@ class LoginFormState extends State<LoginForm> {
           refreshToken: userData['stsTokenManager']['refreshToken'],
         ));
 
-        // Redirect to MainScreen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MainScreen()),
