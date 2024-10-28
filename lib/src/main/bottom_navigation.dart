@@ -12,8 +12,13 @@ List<BottomNavigationBarItem> buildBottomNavBarItems(bool isLoggedIn) {
       label: 'Profile',
     ),
     const BottomNavigationBarItem(
-      icon: Icon(Icons.trending_up), // New Icon
-      label: 'Tokens', // New Label
+      icon: Icon(Icons.trending_up), // Icon for GeckoTokens
+      label: 'Tokens',
+    ),
+    const BottomNavigationBarItem(
+      // New BottomNavigationBarItem for Trending NFTs
+      icon: Icon(Icons.photo), // You can choose a suitable icon
+      label: 'Trending NFTs',
     ),
   ];
 }

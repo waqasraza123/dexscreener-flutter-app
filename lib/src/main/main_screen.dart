@@ -6,6 +6,7 @@ import '../user/profile_screen.dart';
 import '../auth/login_screen.dart';
 import 'bottom_navigation.dart';
 import '../token/gecko/gecko_tokens_screen.dart';
+import '../nfts/trending_nfts_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -29,13 +30,14 @@ class MainScreenState extends State<MainScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: true);
     final bool isLoggedIn = userProvider.user?.accessToken != null;
 
-    // Define the three screens for the bottom navigation: Home, Profile/Login, GeckoTokens
+    // Define the four screens for the bottom navigation: Home, Profile/Login, GeckoTokens, and Trending NFTs
     final List<Widget> screens = [
       const DataScreen(), // Home screen
       isLoggedIn
           ? const ProfileScreen()
           : const LoginScreen(), // Profile or Login
-      const GeckoTokensScreen(), // New GeckoTokensScreen
+      const GeckoTokensScreen(), // GeckoTokensScreen
+      TrendingNFTsScreen(), // Add TrendingNFTsScreen here
     ];
 
     return Scaffold(
@@ -76,6 +78,8 @@ class MainScreenState extends State<MainScreen> {
         return isLoggedIn ? 'Profile' : 'Login';
       case 2:
         return 'Trending Cryptocurrencies';
+      case 3: // New case for Trending NFTs
+        return 'Trending NFTs';
       default:
         return '';
     }
