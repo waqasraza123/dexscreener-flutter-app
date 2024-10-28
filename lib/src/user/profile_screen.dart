@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dexscreener_flutter/providers/user_provider.dart';
+import '../main/main_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -11,14 +12,18 @@ class ProfileScreen extends StatelessWidget {
     final user = userProvider.user;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profile'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 40),
-
-            // Profile picture
             CircleAvatar(
               radius: 50,
               backgroundColor: Colors.grey[200],
@@ -28,10 +33,7 @@ class ProfileScreen extends StatelessWidget {
                 color: Colors.grey[500],
               ),
             ),
-
             const SizedBox(height: 20),
-
-            // User email or name
             Text(
               user?.email ?? 'Guest User',
               style: const TextStyle(
@@ -40,10 +42,7 @@ class ProfileScreen extends StatelessWidget {
                 color: Colors.black87,
               ),
             ),
-
             const SizedBox(height: 5),
-
-            // User ID or any other info (optional)
             if (user?.uid != null)
               Text(
                 'UID: ${user!.uid}',
@@ -52,10 +51,7 @@ class ProfileScreen extends StatelessWidget {
                   color: Colors.grey[600],
                 ),
               ),
-
             const SizedBox(height: 40),
-
-            // Account Settings / Profile Information section (if needed)
             _buildProfileOption(
               icon: Icons.settings_outlined,
               label: 'Account Settings',
@@ -64,7 +60,6 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
             const SizedBox(height: 10),
-
             _buildProfileOption(
               icon: Icons.lock_outline,
               label: 'Privacy Settings',
@@ -72,46 +67,44 @@ class ProfileScreen extends StatelessWidget {
                 // Handle Privacy Settings tap
               },
             ),
-
             const Spacer(),
-
-            // Logout button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                ),
-                onPressed: () {
-                  userProvider.logoutUser();
-                  Navigator.of(context).pushReplacementNamed('/login');
-                },
-                child: const Text(
-                  'Logout',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.logout),
+            label: 'Logout',
+          ),
+        ],
+        currentIndex: 0,
+        onTap: (index) {
+          if (index == 0) {
+            // Navigate to MainScreen
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const MainScreen()),
+            );
+          } else if (index == 1) {
+            // Perform logout and navigate to login screen
+            userProvider.logoutUser();
+            Navigator.of(context).pushReplacementNamed('/login');
+          }
+        },
       ),
     );
   }
 
   // Helper method to build profile options
-  Widget _buildProfileOption(
-      {required IconData icon,
-      required String label,
-      required VoidCallback onTap}) {
+  Widget _buildProfileOption({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

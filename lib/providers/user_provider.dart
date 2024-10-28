@@ -18,15 +18,12 @@ class UserProvider with ChangeNotifier {
     String? refreshToken = prefs.getString('refreshToken');
 
     // Check if all necessary fields are available
-    if (email != null &&
-        uid != null &&
-        accessToken != null &&
-        refreshToken != null) {
+    if (uid != null) {
       _user = User(
-        email: email,
+        email: email!,
         uid: uid,
         displayName: null,
-        accessToken: accessToken,
+        accessToken: accessToken!,
         refreshToken: refreshToken,
       );
       notifyListeners();
