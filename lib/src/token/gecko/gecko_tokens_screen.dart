@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../../../services/coin_gecko_service.dart';
 import '../../../utils/amount_converter.dart';
 
@@ -30,15 +31,14 @@ class _GeckoTokensScreenState extends State<GeckoTokensScreen> {
     } catch (e) {
       print('Error: $e');
     }
+
+    Logger logger = Logger();
+    logger.i(tokens);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(

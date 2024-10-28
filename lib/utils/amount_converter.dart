@@ -1,3 +1,5 @@
+import 'package:logger/logger.dart';
+
 double convertToReadableAmount(dynamic amount) {
   // Convert the input to double if it's a String
   double numericAmount;
@@ -23,13 +25,15 @@ double convertToReadableAmount(dynamic amount) {
 }
 
 String formatAmount(dynamic amount) {
-  // Convert the input to double if it's a String
+  // Convert amount to a double if possible
   double numericAmount;
-  if (amount is String) {
-    numericAmount =
-        double.tryParse(amount) ?? 0.0; // Fallback to 0.0 if parsing fails
+  if (amount is int) {
+    numericAmount = amount.toDouble(); // Convert int directly to double
   } else if (amount is double) {
     numericAmount = amount;
+  } else if (amount is String) {
+    numericAmount =
+        double.tryParse(amount) ?? 0.0; // Fallback to 0.0 if parsing fails
   } else {
     return '0'; // Return '0' for unsupported types
   }

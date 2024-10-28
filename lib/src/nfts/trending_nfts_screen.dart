@@ -41,9 +41,6 @@ class _TrendingNFTsScreenState extends State<TrendingNFTsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Trending NFTs'),
-      ),
       body: nftData.isEmpty
           ? Center(child: CircularProgressIndicator())
           : GridView.builder(
