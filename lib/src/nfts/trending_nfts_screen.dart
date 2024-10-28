@@ -40,6 +40,8 @@ class _TrendingNFTsScreenState extends State<TrendingNFTsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: nftData.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -63,35 +65,47 @@ class _TrendingNFTsScreenState extends State<TrendingNFTsScreen> {
 
                 return Card(
                   elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
+                      // Full-width header image at the top of the card
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(8.0),
+                          topRight: Radius.circular(8.0),
+                        ),
                         child: Image.network(
                           image,
+                          height: screenHeight * 0.15, // Responsive height
+                          width: double.infinity,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             return Icon(Icons.image, size: 50);
                           },
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                      // Card content below the image
+                      Expanded(
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 4.0),
-                            Text('Symbol: $symbol'),
-                            Text('Rarity: $rarityLabel'),
-                            Text('Owner: $ownerOf'),
-                          ],
+                              SizedBox(height: 4.0),
+                              Text('Symbol: $symbol'),
+                              Text('Rarity: $rarityLabel'),
+                              Text('Owner: $ownerOf'),
+                            ],
+                          ),
                         ),
                       ),
                     ],

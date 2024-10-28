@@ -77,7 +77,7 @@ class MainScreenState extends State<MainScreen> {
       case 1:
         return isLoggedIn ? 'Profile' : 'Login';
       case 2:
-        return 'Trending Cryptocurrencies';
+        return 'Trending Crypto';
       case 3: // New case for Trending NFTs
         return 'Trending NFTs';
       default:

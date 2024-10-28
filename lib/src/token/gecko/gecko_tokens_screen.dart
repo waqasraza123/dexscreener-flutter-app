@@ -112,10 +112,10 @@ class _GeckoTokensScreenState extends State<GeckoTokensScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _buildStat("Circ. Supply",
+                              _buildStat("Circ. S.",
                                   token['circulating_supply'] ?? '0'),
                               _buildStat(
-                                  "Total Supply", token['total_supply'] ?? '0'),
+                                  "Total S.", token['total_supply'] ?? '0'),
                               _buildStat("MCAP",
                                   token['market_cap']?.toString() ?? '0'),
                             ],

@@ -1,7 +1,5 @@
 # dexscreener_flutter
 
-Android 34:
-
-![Android](.git_meta/android-home.png)
 ![MacOS Native App Build](.git_meta/flutter-macos-native-app-home.png)
 ![Live chat](.git_meta/group-chat-using-sockets.io-and-supabase.png)
+![alt text](.git_meta/Screenshot_2024-10-28-09-50-05-84_ac39fb0d891fb367b702aabf8b69f8cb.jpg) ![alt text](.git_meta/Screenshot_2024-10-28-09-50-11-41_ac39fb0d891fb367b702aabf8b69f8cb.jpg) ![alt text](.git_meta/Screenshot_2024-10-28-09-50-14-03_ac39fb0d891fb367b702aabf8b69f8cb.jpg) ![alt text](.git_meta/Screenshot_2024-10-28-09-50-20-93_ac39fb0d891fb367b702aabf8b69f8cb.jpg) ![alt text](.git_meta/Screenshot_2024-10-28-09-50-27-08_ac39fb0d891fb367b702aabf8b69f8cb.jpg) ![alt text](.git_meta/Screenshot_2024-10-28-09-51-22-93_ac39fb0d891fb367b702aabf8b69f8cb.png) ![alt text](.git_meta/Screenshot_2024-10-28-09-51-36-93_ac39fb0d891fb367b702aabf8b69f8cb.png) ![alt text](.git_meta/Screenshot_2024-10-28-10-13-28-45_ac39fb0d891fb367b702aabf8b69f8cb.jpg) ![alt text](.git_meta/Screenshot_2024-10-28-10-13-50-65_ac39fb0d891fb367b702aabf8b69f8cb.jpg)
